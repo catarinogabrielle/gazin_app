@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo } from './styles';
@@ -13,6 +13,8 @@ var shadow = {
     shadowOpacity: 0.4,
     shadowRadius: 10,
 }
+
+console.log(JSON.stringify(Platform.constants.Model, null, 2))
 
 export default function Home() {
     return (
