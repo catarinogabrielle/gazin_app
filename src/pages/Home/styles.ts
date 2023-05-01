@@ -41,7 +41,7 @@ align-items: center;
 `;
 
 export const ContentInfo = styled.View`
-padding: 45px 14px;
+padding: 32px 10px;
 margin: 35px 16px 0 16px;
 align-items: center;
 background-color:${ColorTheme.Branco4};
@@ -49,7 +49,7 @@ background-color:${ColorTheme.Branco4};
 
 export const Text = styled.Text`                                    
 color: ${ColorTheme.Preto};
-font-size: 22px;
+font-size: 21px;
 font-weight: 700;
 text-align: center;
 text-transform: uppercase;

@@ -7,7 +7,17 @@ import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text
 import Colors from '../../../constants/Colors';
 const ColorTheme = Colors['Theme'];
 
-import api from '../../../contexts/api.json'
+type DeviceProps = {
+    id: string,
+    name: string,
+    code: string,
+    cash_price: string,
+    term_price: string,
+    parcel: string,
+    value_parcel: string
+}
+
+import { api } from '../../services/api'
 
 var shadow = {
     elevation: 3,
@@ -18,10 +28,20 @@ var shadow = {
 
 export default function Home() {
     const [phone, setPhone] = useState('')
+    const [devices, setDevices] = useState<DeviceProps[] | []>([])
 
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
+    }, [])
+
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await api.get('device')
+            setDevices(response.data)
+        }
+
+        loadingDevice()
     }, [])
 
     return (
@@ -31,28 +51,36 @@ export default function Home() {
                 <TextLogo>Seja Bem Vindo (a)</TextLogo>
             </Header>
 
-            <Content>
-                <BoxVideo>
-                    <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                    <YoutubePlayer
-                        width="100%"
-                        height={222}
-                        videoId={api.link}
-                        play={true}
-                    />
-                </BoxVideo>
+            {devices ? (
+                <Content>
+                    <BoxVideo>
+                        <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                        <YoutubePlayer
+                            width="100%"
+                            height={222}
+                            videoId={"IentQeNVJFU"}
+                            play={true}
+                        />
+                    </BoxVideo>
 
-                {api.rows.map(item => {
-                    if (`"${item.code}"` == phone) return (
-                        <ContentInfo key={item.id} style={shadow}>
-                            <Text>{item.name}</Text>
-                            <Label>Preço à Vista: <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text></Label>
-                            <Label>Preço à Prazo: <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text></Label>
-                            <LabelInfo>em <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text> de <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros</LabelInfo>
-                        </ContentInfo>
-                    )
-                })}
-            </Content>
+                    {devices.map(item => {
+                        if (`"${item.code}"` == phone) return (
+                            <ContentInfo key={item.id} style={shadow}>
+                                <Text>{item.name}</Text>
+                                <Label>Preço à Vista: <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text></Label>
+                                <Label>Preço à Prazo: <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text></Label>
+                                <LabelInfo>em <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text> de <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros</LabelInfo>
+                            </ContentInfo>
+                        )
+                    })}
+                </Content>
+            ) : (
+                <Content>
+                    <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                </Content>
+            )}
+
+
         </Container>
     )
 }
