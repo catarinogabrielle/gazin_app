@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, Platform } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
+import * as Location from 'expo-location';
 
 import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo } from './styles';
 
@@ -29,6 +30,29 @@ var shadow = {
 export default function Home() {
     const [phone, setPhone] = useState('')
     const [devices, setDevices] = useState<DeviceProps[] | []>([])
+    const [location, setLocation] = useState({})
+    const [region, setRegion] = useState({})
+
+    useEffect(() => {
+        const getPermissions = async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync()
+            if (status != 'granted') {
+                console.log('Please grant locationn permissions')
+                return;
+            }
+
+            let currentLocation = await Location.getCurrentPositionAsync({})
+            setLocation(currentLocation)
+            const reversegeocodedLocation = await Location.reverseGeocodeAsync({
+                longitude: currentLocation.coords.longitude,
+                latitude: currentLocation.coords.latitude,
+            })
+            const region = reversegeocodedLocation.map(item => item.region)
+            setRegion(region)
+        }
+
+        getPermissions()
+    }, [])
 
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
