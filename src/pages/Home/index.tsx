@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ActivityIndicator, Platform } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
+import apidDevices from '../../../contexts/devices.json';
 
 import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo } from './styles';
 
@@ -87,13 +88,43 @@ export default function Home() {
                         />
                     </BoxVideo>
 
-                    {devices.map(item => {
+                    {apidDevices.rows.map(item => {
                         if (`"${item.code}"` == phone) return (
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
-                                <Label>Preço à Vista: <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text></Label>
-                                <Label>Preço à Prazo: <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text></Label>
-                                <LabelInfo>em <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text> de <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros</LabelInfo>
+                                {item.location == null ? (
+                                    <>
+                                        <Label>Preço à Vista:
+                                            <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
+                                        </Label>
+                                        <Label>Preço à Prazo:
+                                            <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
+                                        </Label>
+                                        <LabelInfo>em
+                                            <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
+                                            de
+                                            <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
+                                        </LabelInfo>
+                                    </>
+                                ) : (
+                                    <>
+                                        {(item.location.region == region) && (
+                                            <>
+                                                <Label>Preço à Vista:
+                                                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.location.cash_price}</Text>
+                                                </Label>
+                                                <Label>Preço à Prazo:
+                                                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.location.term_price}</Text>
+                                                </Label>
+                                                <LabelInfo>em
+                                                    <Text style={{ color: ColorTheme.Laranja }}>{item.location.parcel}x</Text>
+                                                    de
+                                                    <Text style={{ color: ColorTheme.Laranja }}>R$ {item.location.value_parcel} </Text>sem juros
+                                                </LabelInfo>
+                                            </>
+                                        )}
+                                    </>
+                                )}
                             </ContentInfo>
                         )
                     })}
