@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import apidDevices from '../../../contexts/devices.json';
 
-import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo } from './styles';
+import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo, ContentLocation } from './styles';
 
 import Colors from '../../../constants/Colors';
 const ColorTheme = Colors['Theme'];
@@ -108,21 +108,23 @@ export default function Home() {
                                     </>
                                 ) : (
                                     <>
-                                        {(item.location.region == region) && (
-                                            <>
-                                                <Label>Preço à Vista:
-                                                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.location.cash_price}</Text>
-                                                </Label>
-                                                <Label>Preço à Prazo:
-                                                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.location.term_price}</Text>
-                                                </Label>
-                                                <LabelInfo>em
-                                                    <Text style={{ color: ColorTheme.Laranja }}>{item.location.parcel}x</Text>
-                                                    de
-                                                    <Text style={{ color: ColorTheme.Laranja }}>R$ {item.location.value_parcel} </Text>sem juros
-                                                </LabelInfo>
-                                            </>
-                                        )}
+                                        {apidDevices.locations.map(i => {
+                                            if (`"${i.code}"` == phone && i.region == region) return (
+                                                < ContentLocation key={i.id}>
+                                                    <Label>Preço à Vista:
+                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {i.cash_price}</Text>
+                                                    </Label>
+                                                    <Label>Preço à Prazo:
+                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {i.term_price}</Text>
+                                                    </Label>
+                                                    <LabelInfo>em
+                                                        <Text style={{ color: ColorTheme.Laranja }}>{i.parcel}x</Text>
+                                                        de
+                                                        <Text style={{ color: ColorTheme.Laranja }}>R$ {i.value_parcel} </Text>sem juros
+                                                    </LabelInfo>
+                                                </ContentLocation>
+                                            )
+                                        })}
                                     </>
                                 )}
                             </ContentInfo>

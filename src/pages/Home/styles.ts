@@ -72,3 +72,7 @@ font-weight: 300;
 margin-top: 4px;
 font-family: Roboto;
 `;
+
+export const ContentLocation = styled.View`
+align-items: center;
+`;
