@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform, View } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import apidDevices from '../../../contexts/devices.json';
 
-import { Container, Header, Logo, TextLogo, Content, BoxVideo, ContentInfo, Text, Label, LabelInfo, ContentLocation } from './styles';
+import {
+    Container,
+    Header,
+    Logo,
+    TextLogo,
+    Content,
+    BoxVideo,
+    ContentInfo,
+    Text,
+    Label,
+    LabelInfo,
+    ContentLocation
+} from './styles';
 
 import Colors from '../../../constants/Colors';
 const ColorTheme = Colors['Theme'];
@@ -136,8 +148,6 @@ export default function Home() {
                     <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
                 </Content>
             )}
-
-
         </Container>
     )
 }
