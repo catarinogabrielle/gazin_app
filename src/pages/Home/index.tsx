@@ -3,6 +3,7 @@ import { ActivityIndicator, Platform } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import apidDevices from '../../../contexts/devices.json';
+import apidLocations from '../../../contexts/location.json';
 
 import {
     Container,
