@@ -58,8 +58,6 @@ export default function Home() {
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
 
-    console.log(region)
-
     useEffect(() => {
         const getPermissions = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync()
@@ -111,7 +109,7 @@ export default function Home() {
                 <TextLogo>Seja Bem Vindo (a)</TextLogo>
             </Header>
 
-            {devices ? (
+            {devices && apiLocation ? (
                 <Content>
                     <BoxVideo>
                         <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -145,7 +143,7 @@ export default function Home() {
                                     <>
                                         {apiLocation.map(i => {
                                             if (`"${i.code}"` == phone && i.region == region) return (
-                                                < ContentLocation key={i.id}>
+                                                <ContentLocation key={i.id}>
                                                     <Label>Preço à Vista:
                                                         <Text style={{ color: ColorTheme.Azul }}>R$ {i.cash_price}</Text>
                                                     </Label>
@@ -156,6 +154,21 @@ export default function Home() {
                                                         <Text style={{ color: ColorTheme.Laranja }}>{i.parcel}x</Text>
                                                         de
                                                         <Text style={{ color: ColorTheme.Laranja }}>R$ {i.value_parcel} </Text>sem juros
+                                                    </LabelInfo>
+                                                </ContentLocation>
+                                            )
+                                            if (`"${i.code}"` == phone && i.region !== region) return (
+                                                <ContentLocation key={i.id}>
+                                                    <Label>Preço à Vista:
+                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
+                                                    </Label>
+                                                    <Label>Preço à Prazo:
+                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
+                                                    </Label>
+                                                    <LabelInfo>em
+                                                        <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
+                                                        de
+                                                        <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
                                                     </LabelInfo>
                                                 </ContentLocation>
                                             )
