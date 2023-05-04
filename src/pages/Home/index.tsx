@@ -28,6 +28,17 @@ type DeviceProps = {
     cash_price: string,
     term_price: string,
     parcel: string,
+    value_parcel: string,
+    location: boolean
+}
+
+type LocationProps = {
+    id: string,
+    code: string,
+    region: string,
+    cash_price: string,
+    term_price: string,
+    parcel: string,
     value_parcel: string
 }
 
@@ -43,8 +54,11 @@ var shadow = {
 export default function Home() {
     const [phone, setPhone] = useState('')
     const [devices, setDevices] = useState<DeviceProps[] | []>([])
+    const [apiLocation, setApiLocation] = useState<LocationProps[] | []>([])
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
+
+    console.log(region)
 
     useEffect(() => {
         const getPermissions = async () => {
@@ -60,12 +74,12 @@ export default function Home() {
                 longitude: currentLocation.coords.longitude,
                 latitude: currentLocation.coords.latitude,
             })
-            const region = reversegeocodedLocation.map(item => item.region)
-            setRegion(region)
+            const regions = reversegeocodedLocation.map(item => item.region)
+            setRegion(regions)
         }
 
         getPermissions()
-    }, [])
+    }, [region])
 
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
@@ -76,6 +90,15 @@ export default function Home() {
         async function loadingDevice() {
             const response = await api.get('device')
             setDevices(response.data)
+        }
+
+        loadingDevice()
+    }, [])
+
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await api.get('location')
+            setApiLocation(response.data)
         }
 
         loadingDevice()
@@ -100,11 +123,11 @@ export default function Home() {
                         />
                     </BoxVideo>
 
-                    {apidDevices.rows.map(item => {
+                    {devices.map(item => {
                         if (`"${item.code}"` == phone) return (
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
-                                {item.location == null ? (
+                                {item.location == false ? (
                                     <>
                                         <Label>Preço à Vista:
                                             <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
@@ -120,7 +143,7 @@ export default function Home() {
                                     </>
                                 ) : (
                                     <>
-                                        {apidDevices.locations.map(i => {
+                                        {apiLocation.map(i => {
                                             if (`"${i.code}"` == phone && i.region == region) return (
                                                 < ContentLocation key={i.id}>
                                                     <Label>Preço à Vista:

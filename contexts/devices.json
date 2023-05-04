@@ -47,7 +47,7 @@
             "term_price": "1.800,50",
             "parcel": "10",
             "value_parcel": "64,00",
-            "location": null
+            "location": false
         },
         {
             "id": 3,
