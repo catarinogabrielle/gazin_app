@@ -102,6 +102,24 @@ export default function Home() {
         loadingDevice()
     }, [])
 
+    function handleLocation(item: any) {
+        return (
+            <>
+                <Label>Preço à Vista:
+                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
+                </Label>
+                <Label>Preço à Prazo:
+                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
+                </Label>
+                <LabelInfo>em
+                    <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
+                    de
+                    <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
+                </LabelInfo>
+            </>
+        )
+    }
+
     return (
         <Container>
             <Header>
@@ -126,19 +144,9 @@ export default function Home() {
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
                                 {item.location == false ? (
-                                    <>
-                                        <Label>Preço à Vista:
-                                            <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
-                                        </Label>
-                                        <Label>Preço à Prazo:
-                                            <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
-                                        </Label>
-                                        <LabelInfo>em
-                                            <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
-                                            de
-                                            <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
-                                        </LabelInfo>
-                                    </>
+                                    <ContentLocation>
+                                        {handleLocation(item)}
+                                    </ContentLocation>
                                 ) : (
                                     <>
                                         {apiLocation.map(i => {
@@ -159,17 +167,7 @@ export default function Home() {
                                             )
                                             if (`"${i.code}"` == phone && i.region !== region) return (
                                                 <ContentLocation key={i.id}>
-                                                    <Label>Preço à Vista:
-                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
-                                                    </Label>
-                                                    <Label>Preço à Prazo:
-                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
-                                                    </Label>
-                                                    <LabelInfo>em
-                                                        <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
-                                                        de
-                                                        <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
-                                                    </LabelInfo>
+                                                    {handleLocation(item)}
                                                 </ContentLocation>
                                             )
                                         })}
