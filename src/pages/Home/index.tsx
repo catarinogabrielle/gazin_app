@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import apidDevices from '../../../contexts/devices.json';
@@ -37,6 +37,9 @@ type LocationProps = {
     id: string,
     code: string,
     region: string,
+    city: string,
+    store: string,
+    id_store: number,
     cash_price: string,
     term_price: string,
     parcel: string,
@@ -54,10 +57,12 @@ var shadow = {
 
 export default function Home() {
     const [phone, setPhone] = useState('')
-    const [devices, setDevices] = useState<DeviceProps[] | []>([])
     const [apiLocation, setApiLocation] = useState<LocationProps[] | []>([])
+    const [devices, setDevices] = useState<DeviceProps[] | []>([])
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
+    const [city, setCity] = useState({})
+    const [idStore, setIdStore] = useState('Padrão')
 
     useEffect(() => {
         const getPermissions = async () => {
@@ -73,36 +78,38 @@ export default function Home() {
                 longitude: currentLocation.coords.longitude,
                 latitude: currentLocation.coords.latitude,
             })
-            const regions = reversegeocodedLocation.map(item => item.region)
-            setRegion(regions)
+            //const regions = reversegeocodedLocation.map(item => item.region)
+            //setRegion(regions)
+            const city = reversegeocodedLocation.map(item => item.city)
+            setCity(city)
         }
 
         getPermissions()
-    }, [region])
+    }, [city])
 
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
     }, [])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await api.get('device')
-            setDevices(response.data)
-        }
-
-        loadingDevice()
-    }, [])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await api.get('location')
-            setApiLocation(response.data)
-        }
-
-        loadingDevice()
-    }, [])
-
+    /** 
+        useEffect(() => {
+            async function loadingDevice() {
+                const response = await api.get('device')
+                setDevices(response.data)
+            }
+    
+            loadingDevice()
+        }, [])
+    
+        useEffect(() => {
+            async function loadingDevice() {
+                const response = await api.get('location')
+                setApiLocation(response.data)
+            }
+    
+            loadingDevice()
+        }, [])
+    */
     function handleLocation(item: any) {
         return (
             <>
@@ -128,7 +135,7 @@ export default function Home() {
                 <TextLogo>Seja Bem Vindo (a)</TextLogo>
             </Header>
 
-            {devices && apiLocation ? (
+            {apidDevices && apiLocation ? (
                 <Content>
                     <BoxVideo>
                         <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -140,18 +147,18 @@ export default function Home() {
                         />
                     </BoxVideo>
 
-                    {devices.map(item => {
+                    {apidDevices.devices.map(item => {
                         if (`"${item.code}"` == phone) return (
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
-                                {item.location == false ? (
+                                {item.location == false || idStore == 'Padrão' ? (
                                     <ContentLocation>
                                         {handleLocation(item)}
                                     </ContentLocation>
                                 ) : (
                                     <>
-                                        {apiLocation.map(i => {
-                                            if (`"${i.code}"` == phone && i.region == region) return (
+                                        {apidLocations.locations.map(i => {
+                                            if (i.id_store == idStore && `"${i.code}"` == phone) return (
                                                 <ContentLocation key={i.id}>
                                                     <Label>Preço à Vista:
                                                         <Text style={{ color: ColorTheme.Azul }}>R$ {i.cash_price}</Text>
@@ -164,11 +171,6 @@ export default function Home() {
                                                         de
                                                         <Text style={{ color: ColorTheme.Laranja }}>R$ {i.value_parcel} </Text>sem juros
                                                     </LabelInfo>
-                                                </ContentLocation>
-                                            )
-                                            if (`"${i.code}"` == phone && i.region !== region) return (
-                                                <ContentLocation key={i.id}>
-                                                    {handleLocation(item)}
                                                 </ContentLocation>
                                             )
                                         })}
