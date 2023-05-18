@@ -7,7 +7,7 @@
             "city": "Maringá",
             "store": "Gazin Maringá 1",
             "id_store": "10012",
-            "cash_price": "1.299,00",
+            "cash_price": "7.299,00",
             "term_price": "1.829,68",
             "parcel": "10",
             "value_parcel": "34,89"
@@ -37,7 +37,7 @@
             "value_parcel": "74,89"
         },
         {
-            "id": 6,
+            "id": 7,
             "code": "sdk_gphone_x86",
             "region": "California",
             "city": "Mountain View",

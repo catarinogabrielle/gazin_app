@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform, View } from 'react-native';
+import { ActivityIndicator, Platform, Modal, ScrollView } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
-import apidDevices from '../../../contexts/devices.json';
-import apidLocations from '../../../contexts/location.json';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import {
     Container,
     Header,
+    ContentLogo,
     Logo,
     TextLogo,
+    ContentMenu,
     Content,
     BoxVideo,
     ContentInfo,
     Text,
     Label,
     LabelInfo,
-    ContentLocation
+    ContentLocation,
+    ContainerModal,
+    ContainerModalOpacity,
+    ContentModal,
+    TouchableClosed,
+    BoxStore,
+    NameStore
 } from './styles';
 
 import Colors from '../../../constants/Colors';
@@ -53,16 +60,21 @@ var shadow = {
     shadowColor: "grey",
     shadowOpacity: 0.4,
     shadowRadius: 10,
+    shadowOffset: {
+        width: 0,
+        height: 2
+    }
 }
 
 export default function Home() {
     const [phone, setPhone] = useState('')
     const [apiLocation, setApiLocation] = useState<LocationProps[] | []>([])
-    const [devices, setDevices] = useState<DeviceProps[] | []>([])
+    const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
     const [city, setCity] = useState({})
-    const [idStore, setIdStore] = useState('Padrão')
+    const [Store, setStore] = useState('unik')
+    const [visibleModal, setVisibleModal] = useState(false)
 
     useEffect(() => {
         const getPermissions = async () => {
@@ -78,51 +90,52 @@ export default function Home() {
                 longitude: currentLocation.coords.longitude,
                 latitude: currentLocation.coords.latitude,
             })
-            //const regions = reversegeocodedLocation.map(item => item.region)
-            //setRegion(regions)
-            const city = reversegeocodedLocation.map(item => item.city)
+            const regions = reversegeocodedLocation.map(item => item.region)
+            setRegion(regions)
+            const city = reversegeocodedLocation.map(item => item.region)
             setCity(city)
         }
 
         getPermissions()
-    }, [city])
+    }, [region])
 
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
-    }, [])
-    /** 
-        useEffect(() => {
-            async function loadingDevice() {
-                const response = await api.get('device')
-                setDevices(response.data)
-            }
-    
-            loadingDevice()
-        }, [])
-    
-        useEffect(() => {
-            async function loadingDevice() {
-                const response = await api.get('location')
-                setApiLocation(response.data)
-            }
-    
-            loadingDevice()
-        }, [])
-    */
+    }, [phone])
+
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await api.get('device')
+            console.log(response.data)
+            setApiDevices(response.data)
+        }
+
+        loadingDevice()
+    }, [apiDevices])
+
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await api.get('location')
+            setApiLocation(response.data)
+        }
+
+        loadingDevice()
+    }, [apiLocation])
+
     function handleLocation(item: any) {
         return (
             <>
                 <Label>Preço à Vista:
-                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.cash_price}</Text>
+                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.cash_price}</Text>
                 </Label>
                 <Label>Preço à Prazo:
-                    <Text style={{ color: ColorTheme.Azul }}>R$ {item.term_price}</Text>
+                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.term_price}</Text>
                 </Label>
                 <LabelInfo>em
-                    <Text style={{ color: ColorTheme.Laranja }}>{item.parcel}x</Text>
+                    <Text style={{ color: ColorTheme.Laranja }}> {item.parcel}x </Text>
                     de
-                    <Text style={{ color: ColorTheme.Laranja }}>R$ {item.value_parcel} </Text>sem juros
+                    <Text style={{ color: ColorTheme.Laranja }}> R$ {item.value_parcel} </Text>sem juros
                 </LabelInfo>
             </>
         )
@@ -131,11 +144,16 @@ export default function Home() {
     return (
         <Container>
             <Header>
-                <Logo source={require('../../assets/logogazin.png')} />
-                <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                <ContentLogo>
+                    <Logo source={require('../../assets/logogazin.png')} />
+                    <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                </ContentLogo>
+                <ContentMenu onPress={() => setVisibleModal(true)}>
+                    <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
+                </ContentMenu>
             </Header>
 
-            {apidDevices && apiLocation ? (
+            {apiDevices && apiLocation ? (
                 <Content>
                     <BoxVideo>
                         <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -147,20 +165,20 @@ export default function Home() {
                         />
                     </BoxVideo>
 
-                    {apidDevices.devices.map(item => {
+                    {apiDevices.map(item => {
                         if (`"${item.code}"` == phone) return (
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
-                                {item.location == false || idStore == 'Padrão' ? (
+                                {item.location == false || Store == 'unik' ? (
                                     <ContentLocation>
                                         {handleLocation(item)}
                                     </ContentLocation>
                                 ) : (
                                     <>
-                                        {apidLocations.locations.map(i => {
-                                            if (i.id_store == idStore && `"${i.code}"` == phone) return (
+                                        {apiLocation.map(i => {
+                                            if (i.store == Store && `"${i.code}"` == phone) return (
                                                 <ContentLocation key={i.id}>
-                                                    <Label>Preço à Vista:
+                                                    <Label>Preço à Vista: ''
                                                         <Text style={{ color: ColorTheme.Azul }}>R$ {i.cash_price}</Text>
                                                     </Label>
                                                     <Label>Preço à Prazo:
@@ -185,6 +203,43 @@ export default function Home() {
                     <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
                 </Content>
             )}
+
+            <Modal
+                visible={visibleModal}
+                transparent={true}
+                onRequestClose={() => setVisibleModal(false)}
+                animationType="slide"
+            >
+                <ContainerModal>
+                    <ContainerModalOpacity>
+                        <ContentModal>
+                            <TouchableClosed onPress={() => setVisibleModal(false)}>
+                                <Ionicons name="close" size={28} color={ColorTheme.Branco5} />
+                            </TouchableClosed>
+                            <ScrollView style={{ width: "100%" }}>
+                                <BoxStore onPress={() => {
+                                    setStore('unik')
+                                    setVisibleModal(false)
+                                }}>
+                                    <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
+                                    <NameStore>Valor Nacional</NameStore>
+                                </BoxStore>
+                                {apiLocation.map(i => {
+                                    if (i.region == region && `"${i.code}"` == phone) return (
+                                        <BoxStore key={i.id} onPress={() => {
+                                            setStore(i.store)
+                                            setVisibleModal(false)
+                                        }}>
+                                            <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
+                                            <NameStore>{i.store}</NameStore>
+                                        </BoxStore>
+                                    )
+                                })}
+                            </ScrollView>
+                        </ContentModal>
+                    </ContainerModalOpacity>
+                </ContainerModal>
+            </Modal>
         </Container>
     )
 }
