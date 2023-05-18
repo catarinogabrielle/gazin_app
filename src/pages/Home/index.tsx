@@ -102,7 +102,7 @@ export default function Home() {
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
-    }, [phone])
+    }, [region])
 
     useEffect(() => {
         async function loadingDevice() {
@@ -112,7 +112,7 @@ export default function Home() {
         }
 
         loadingDevice()
-    }, [apiDevices])
+    }, [region])
 
     useEffect(() => {
         async function loadingDevice() {
@@ -121,7 +121,7 @@ export default function Home() {
         }
 
         loadingDevice()
-    }, [apiLocation])
+    }, [region])
 
     function handleLocation(item: any) {
         return (
