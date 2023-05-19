@@ -47,6 +47,18 @@
             "term_price": "3.829,68",
             "parcel": "11",
             "value_parcel": "74,89"
+        },
+        {
+            "id": 8,
+            "code": "SM-G990E",
+            "region": "Paraná",
+            "city": "Maringá",
+            "store": "Gazin Maringá 3",
+            "id_store": "10012",
+            "cash_price": "5.299,00",
+            "term_price": "4.829,68",
+            "parcel": "11",
+            "value_parcel": "94,89"
         }
     ]
 }
