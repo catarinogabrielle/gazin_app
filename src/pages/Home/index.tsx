@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform, Modal, ScrollView } from 'react-native';
+import { ActivityIndicator, Platform, Modal, ScrollView, View } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -151,14 +151,24 @@ export default function Home() {
                     <Logo source={require('../../assets/logogazin.png')} />
                     <TextLogo>Seja Bem Vindo (a)</TextLogo>
                 </ContentLogo>
-                {menu && (
-                    <ContentMenu onPress={() => setVisibleModal(true)}>
-                        <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
-                    </ContentMenu>
-                )}
+                {ApiDevices.devices.map(item => {
+                    if (`"${item.code}"` == phone) return (
+                        <View key={item.id}>
+                            {item.location == true && (
+                                <>
+                                    {menu && (
+                                        <ContentMenu onPress={() => setVisibleModal(true)}>
+                                            <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
+                                        </ContentMenu>
+                                    )}
+                                </>
+                            )}
+                        </View>
+                    )
+                })}
             </Header>
 
-            {apiDevices && apiLocation ? (
+            {ApiDevices && ApiLocation ? (
                 <Content>
                     <BoxVideo>
                         <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -170,7 +180,7 @@ export default function Home() {
                         />
                     </BoxVideo>
 
-                    {apiDevices.map(item => {
+                    {ApiDevices.devices.map(item => {
                         if (`"${item.code}"` == phone) return (
                             <ContentInfo key={item.id} style={shadow}>
                                 <Text>{item.name}</Text>
@@ -180,7 +190,7 @@ export default function Home() {
                                     </ContentLocation>
                                 ) : (
                                     <>
-                                        {apiLocation.map(i => {
+                                        {ApiLocation.locations.map(i => {
                                             if (i.store == Store && `"${i.code}"` == phone) return (
                                                 <ContentLocation key={i.id}>
                                                     <Label>Preço à Vista:
@@ -230,7 +240,7 @@ export default function Home() {
                                     <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
                                     <NameStore>Valor Nacional</NameStore>
                                 </BoxStore>
-                                {apiLocation.map(i => {
+                                {ApiLocation.locations.map(i => {
                                     if (i.region == region && `"${i.code}"` == phone) return (
                                         <BoxStore key={i.id} onPress={() => {
                                             setStore(i.store)
