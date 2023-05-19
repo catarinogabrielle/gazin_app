@@ -75,6 +75,7 @@ export default function Home() {
     const [city, setCity] = useState({})
     const [Store, setStore] = useState('unik')
     const [visibleModal, setVisibleModal] = useState(false)
+    const [menu, setMenu] = useState(true)
 
     useEffect(() => {
         const getPermissions = async () => {
@@ -147,9 +148,11 @@ export default function Home() {
                     <Logo source={require('../../assets/logogazin.png')} />
                     <TextLogo>Seja Bem Vindo (a)</TextLogo>
                 </ContentLogo>
-                <ContentMenu onPress={() => setVisibleModal(true)}>
-                    <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
-                </ContentMenu>
+                {menu && (
+                    <ContentMenu onPress={() => setVisibleModal(true)}>
+                        <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
+                    </ContentMenu>
+                )}
             </Header>
 
             {apiDevices && apiLocation ? (
@@ -219,6 +222,7 @@ export default function Home() {
                                 <BoxStore onPress={() => {
                                     setStore('unik')
                                     setVisibleModal(false)
+                                    setMenu(false)
                                 }}>
                                     <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
                                     <NameStore>Valor Nacional</NameStore>
@@ -228,6 +232,7 @@ export default function Home() {
                                         <BoxStore key={i.id} onPress={() => {
                                             setStore(i.store)
                                             setVisibleModal(false)
+                                            setMenu(false)
                                         }}>
                                             <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
                                             <NameStore>{i.store}</NameStore>

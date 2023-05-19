@@ -12,6 +12,7 @@ width: 100%;
 padding: 16px 10px 13px 10px;
 background-color:${ColorTheme.Azul};
 flex-direction: row;
+height: 60px;
 align-items: center;
 justify-content: space-between;
 `;
@@ -55,7 +56,8 @@ export const ContentInfo = styled.View`
 padding: 52px 10px;
 margin: 35px 16px 0 16px;
 align-items: center;
-background-color:${ColorTheme.Branco4};
+background: #F3F9FF;
+border-radius: 10px;
 `;
 
 export const Text = styled.Text`                                    
@@ -102,7 +104,7 @@ background: rgba(0, 0, 0, 0.35);
 
 export const ContentModal = styled.View`
 margin: 0 10px;
-height: 40%;
+height: 50%;
 background: ${ColorTheme.Branco3};
 padding: 15px 5px;
 border-top-left-radius: 40px;
