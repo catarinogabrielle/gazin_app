@@ -2,26 +2,6 @@
     "devices": [
         {
             "id": 1,
-            "name": "Samsung Galaxy S21 FE",
-            "code": "SM-G990E",
-            "cash_price": "2.509,00",
-            "term_price": "2.697,85",
-            "parcel": "12",
-            "value_parcel": "224,82",
-            "location": true
-        },
-        {
-            "id": 2,
-            "name": "Samsung Galaxy A53",
-            "code": "SM-A536E",
-            "cash_price": "1.224,00",
-            "term_price": "1.800,50",
-            "parcel": "10",
-            "value_parcel": "64,00",
-            "location": true
-        },
-        {
-            "id": 3,
             "name": "Emulador",
             "code": "sdk_gphone_x86",
             "cash_price": "1.069,10",
