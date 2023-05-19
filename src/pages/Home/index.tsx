@@ -106,7 +106,7 @@ export default function Home() {
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
-    }, [phone])
+    }, [phone, region])
     /*
         useEffect(() => {
             async function loadingDevice() {
