@@ -245,7 +245,7 @@ export default function Home() {
                                     <NameStore>Valor Nacional</NameStore>
                                 </BoxStore>
                                 {ApiLocation.locations.map(i => {
-                                    if (i.street == street && `"${i.code}"` == phone) return (
+                                    if (i.postal_code == postalCode && `"${i.code}"` == phone) return (
                                         <BoxStore key={i.id} onPress={() => {
                                             setStore(i.store)
                                             setVisibleModal(false)
