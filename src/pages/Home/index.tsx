@@ -251,7 +251,7 @@ export default function Home() {
                                             setVisibleModal(false)
                                         }}>
                                             <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
-                                            <NameStore>{i.store}</NameStore>
+                                            <NameStore>{i.store} - {i.street}</NameStore>
                                         </BoxStore>
                                     )
                                 })}
