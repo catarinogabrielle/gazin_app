@@ -8,7 +8,7 @@
             "term_price": "2.697,85",
             "parcel": "12",
             "value_parcel": "224,82",
-            "location": false
+            "location": true
         },
         {
             "id": 2,
