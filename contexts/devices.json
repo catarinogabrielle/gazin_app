@@ -9,6 +9,16 @@
             "parcel": "7",
             "value_parcel": "83,22",
             "location": true
+        },
+        {
+            "id": 3,
+            "name": "Sansumg Galaxy A22",
+            "code": "SM-A225M",
+            "cash_price": "1.199,00",
+            "term_price": "1.262,11",
+            "parcel": "10",
+            "value_parcel": "126,21",
+            "location": true
         }
     ]
 }
