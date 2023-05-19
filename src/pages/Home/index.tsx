@@ -102,12 +102,11 @@ export default function Home() {
     useEffect(() => {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
-    }, [region])
+    }, [phone])
 
     useEffect(() => {
         async function loadingDevice() {
             const response = await api.get('device')
-            console.log(response.data)
             setApiDevices(response.data)
         }
 
@@ -178,16 +177,16 @@ export default function Home() {
                                         {apiLocation.map(i => {
                                             if (i.store == Store && `"${i.code}"` == phone) return (
                                                 <ContentLocation key={i.id}>
-                                                    <Label>Preço à Vista: ''
-                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {i.cash_price}</Text>
+                                                    <Label>Preço à Vista:
+                                                        <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
                                                     </Label>
                                                     <Label>Preço à Prazo:
-                                                        <Text style={{ color: ColorTheme.Azul }}>R$ {i.term_price}</Text>
+                                                        <Text style={{ color: ColorTheme.Azul }}> R$ {i.term_price}</Text>
                                                     </Label>
                                                     <LabelInfo>em
-                                                        <Text style={{ color: ColorTheme.Laranja }}>{i.parcel}x</Text>
+                                                        <Text style={{ color: ColorTheme.Laranja }}> {i.parcel}x </Text>
                                                         de
-                                                        <Text style={{ color: ColorTheme.Laranja }}>R$ {i.value_parcel} </Text>sem juros
+                                                        <Text style={{ color: ColorTheme.Laranja }}> R$ {i.value_parcel} </Text>sem juros
                                                     </LabelInfo>
                                                 </ContentLocation>
                                             )

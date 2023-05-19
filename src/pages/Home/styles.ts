@@ -104,7 +104,7 @@ export const ContentModal = styled.View`
 margin: 0 10px;
 height: 40%;
 background: ${ColorTheme.Branco3};
-padding: 15px 0;
+padding: 15px 5px;
 border-top-left-radius: 40px;
 border-top-right-radius: 40px;
 display: flex;
@@ -114,7 +114,7 @@ align-items: flex-end;
 
 export const TouchableClosed = styled.TouchableOpacity`
 display: flex;
-margin: 5px 18px 18px 0;
+margin: 5px 14px 18px 0;
 width: 25px;
 `;
 
