@@ -168,7 +168,7 @@ export default function Home() {
                 })}
             </Header>
 
-            {ApiDevices && ApiLocation ? (
+            {apiLocation && apiDevices ? (
                 <Content>
                     <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
                         <BoxVideo>
@@ -216,7 +216,7 @@ export default function Home() {
                     </ImageBackground>
                 </Content>
             ) : (
-                <Content>
+                <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
                 </Content>
             )}

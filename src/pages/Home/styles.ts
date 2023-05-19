@@ -46,6 +46,7 @@ flex: 1;
 background-color:${ColorTheme.Branco3};
 flex-direction: column;
 width: 100%;
+display: flex;
 `;
 
 export const BoxVideo = styled.View`
