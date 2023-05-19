@@ -75,7 +75,7 @@ export default function Home() {
     const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
-    const [city, setCity] = useState({})
+    const [street, setStret] = useState({})
     const [Store, setStore] = useState('unik')
     const [visibleModal, setVisibleModal] = useState(false)
     const [menu, setMenu] = useState(true)
@@ -96,8 +96,8 @@ export default function Home() {
             })
             const regions = reversegeocodedLocation.map(item => item.region)
             setRegion(regions)
-            const city = reversegeocodedLocation.map(item => item.region)
-            setCity(city)
+            const street = reversegeocodedLocation.map(item => item.street)
+            setStret(street)
         }
 
         getPermissions()
@@ -192,7 +192,7 @@ export default function Home() {
                                     ) : (
                                         <>
                                             {ApiLocation.locations.map(i => {
-                                                if (i.store == Store && `"${i.code}"` == phone) return (
+                                                if (i.street == street && `"${i.code}"` == phone) return (
                                                     <ContentLocation key={i.id}>
                                                         <Label>Preço à Vista:
                                                             <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
@@ -243,7 +243,7 @@ export default function Home() {
                                     <NameStore>Valor Nacional</NameStore>
                                 </BoxStore>
                                 {ApiLocation.locations.map(i => {
-                                    if (i.region == region && `"${i.code}"` == phone) return (
+                                    if (i.street == street && `"${i.code}"` == phone) return (
                                         <BoxStore key={i.id} onPress={() => {
                                             setStore(i.store)
                                             setVisibleModal(false)

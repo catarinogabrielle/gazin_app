@@ -104,7 +104,7 @@ background: rgba(0, 0, 0, 0.35);
 
 export const ContentModal = styled.View`
 margin: 0 10px;
-height: 50%;
+height: 27%;
 background: ${ColorTheme.Branco3};
 padding: 15px 5px;
 border-top-left-radius: 40px;
