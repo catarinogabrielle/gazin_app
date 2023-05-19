@@ -192,7 +192,7 @@ export default function Home() {
                                     ) : (
                                         <>
                                             {ApiLocation.locations.map(i => {
-                                                if (i.street == street && `"${i.code}"` == phone) return (
+                                                if (i.postal_code == postalCode && `"${i.code}"` == phone) return (
                                                     <ContentLocation key={i.id}>
                                                         <Label>Preço à Vista:
                                                             <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
