@@ -2,7 +2,7 @@
     "locations": [
         {
             "id": 4,
-            "code": "SM1-G990E",
+            "code": "SM-G990E",
             "region": "Paraná",
             "city": "Sarandi",
             "store": "Gazin Maringá 1",
@@ -11,8 +11,8 @@
             "term_price": "1.829,68",
             "parcel": "10",
             "value_parcel": "34,89",
-            "street": "Rua Projetada M",
-            "street_number": "140a"
+            "street": "Rua Projetada asM",
+            "street_number": "1d40a"
         },
         {
             "id": 5,

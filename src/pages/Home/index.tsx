@@ -24,6 +24,8 @@ import {
     ContainerModal,
     ContainerModalOpacity,
     ContentModal,
+    BoxStreet,
+    Street,
     TouchableClosed,
     BoxStore,
     NameStore
@@ -76,6 +78,7 @@ export default function Home() {
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
     const [street, setStret] = useState({})
+    const [streetNumber, setStretNumber] = useState({})
     const [store, setStore] = useState('')
     const [visibleModal, setVisibleModal] = useState(false)
 
@@ -97,6 +100,8 @@ export default function Home() {
             setRegion(regions)
             const street = reversegeocodedLocation.map(item => item.street)
             setStret(street)
+            const streetNumber = reversegeocodedLocation.map(item => item.streetNumber)
+            setStretNumber(streetNumber)
         }
 
         getPermissions()
@@ -225,9 +230,12 @@ export default function Home() {
                 <ContainerModal>
                     <ContainerModalOpacity>
                         <ContentModal>
-                            <TouchableClosed onPress={() => setVisibleModal(false)}>
-                                <Ionicons name="close" size={28} color={ColorTheme.Branco5} />
-                            </TouchableClosed>
+                            <BoxStreet>
+                                <Street>{street}, {streetNumber}</Street>
+                                <TouchableClosed onPress={() => setVisibleModal(false)}>
+                                    <Ionicons name="close" size={28} color={ColorTheme.Branco5} />
+                                </TouchableClosed>
+                            </BoxStreet>
                             <ScrollView style={{ width: "100%" }}>
                                 <BoxStore onPress={() => {
                                     setStore('unik')

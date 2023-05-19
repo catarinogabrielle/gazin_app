@@ -104,19 +104,34 @@ background: rgba(0, 0, 0, 0.35);
 
 export const ContentModal = styled.View`
 margin: 0 10px;
-height: 27%;
+height: 30%;
 background: ${ColorTheme.Branco3};
 padding: 15px 5px;
 border-top-left-radius: 40px;
 border-top-right-radius: 40px;
 display: flex;
 z-index: 99;
-align-items: flex-end;
+align-items: center;
+`;
+
+export const BoxStreet = styled.View`
+display: flex;
+width: 90%;
+align-items: center;
+flex-direction: row;
+justify-content: space-between;
+margin: 10px 12px 20px 12px;
+`;
+
+export const Street = styled.Text`                                    
+color: ${ColorTheme.Branco6};
+font-size: 11px;
+font-weight: 200;
+font-family: Roboto;
 `;
 
 export const TouchableClosed = styled.TouchableOpacity`
 display: flex;
-margin: 5px 14px 18px 0;
 width: 25px;
 `;
 
