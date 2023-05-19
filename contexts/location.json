@@ -27,6 +27,20 @@
             "value_parcel": "939,00",
             "street": "Rua Um Ou do Perimetro",
             "street_number": "85"
+        },
+        {
+            "id": 6,
+            "code": "SM-G990E",
+            "region": "Paraná",
+            "city": "Douradina",
+            "store": "Gazin Douradina - Av. Brasil",
+            "id_store": "10015",
+            "cash_price": "938,00",
+            "term_price": "1.009,68",
+            "parcel": "12",
+            "value_parcel": "939,00",
+            "street": "Rua Projetada M",
+            "street_number": "85"
         }
     ]
 }

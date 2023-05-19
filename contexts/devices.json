@@ -19,6 +19,16 @@
             "parcel": "10",
             "value_parcel": "126,21",
             "location": true
+        },
+        {
+            "id": 5,
+            "name": "Celular Gabi",
+            "code": "SM-G990E",
+            "cash_price": "1.069,10",
+            "term_price": "1.410,20",
+            "parcel": "7",
+            "value_parcel": "83,22",
+            "location": true
         }
     ]
 }
