@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icongazin.png",
         "backgroundColor": "#312783"
-      }
+      },
+      "package": "com.gabrielledcastro.Gazin"
     },
     "web": {
       "favicon": "./assets/logogazin.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7c8f73c8-df8d-49b5-bfa9-e0206dccae7b"
+      }
     }
   }
 }

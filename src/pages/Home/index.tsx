@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform, Modal, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Platform, Modal, ScrollView, View, ImageBackground } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -107,25 +107,25 @@ export default function Home() {
         const platform = JSON.stringify(Platform.constants.Model, null, 2)
         setPhone(platform)
     }, [phone])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await api.get('device')
-            setApiDevices(response.data)
-        }
-
-        loadingDevice()
-    }, [region])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await api.get('location')
-            setApiLocation(response.data)
-        }
-
-        loadingDevice()
-    }, [region])
-
+    /*
+        useEffect(() => {
+            async function loadingDevice() {
+                const response = await api.get('device')
+                setApiDevices(response.data)
+            }
+    
+            loadingDevice()
+        }, [region])
+    
+        useEffect(() => {
+            async function loadingDevice() {
+                const response = await api.get('location')
+                setApiLocation(response.data)
+            }
+    
+            loadingDevice()
+        }, [region])
+    */
     function handleLocation(item: any) {
         return (
             <>
@@ -170,48 +170,50 @@ export default function Home() {
 
             {ApiDevices && ApiLocation ? (
                 <Content>
-                    <BoxVideo>
-                        <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                        <YoutubePlayer
-                            width="100%"
-                            height={222}
-                            videoId={"BrX5P0iJsLM"}
-                            play={true}
-                        />
-                    </BoxVideo>
+                    <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
+                        <BoxVideo>
+                            <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                            <YoutubePlayer
+                                width="100%"
+                                height={222}
+                                videoId={"BrX5P0iJsLM"}
+                                play={true}
+                            />
+                        </BoxVideo>
 
-                    {ApiDevices.devices.map(item => {
-                        if (`"${item.code}"` == phone) return (
-                            <ContentInfo key={item.id} style={shadow}>
-                                <Text>{item.name}</Text>
-                                {item.location == false || Store == 'unik' ? (
-                                    <ContentLocation>
-                                        {handleLocation(item)}
-                                    </ContentLocation>
-                                ) : (
-                                    <>
-                                        {ApiLocation.locations.map(i => {
-                                            if (i.store == Store && `"${i.code}"` == phone) return (
-                                                <ContentLocation key={i.id}>
-                                                    <Label>Preço à Vista:
-                                                        <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
-                                                    </Label>
-                                                    <Label>Preço à Prazo:
-                                                        <Text style={{ color: ColorTheme.Azul }}> R$ {i.term_price}</Text>
-                                                    </Label>
-                                                    <LabelInfo>em
-                                                        <Text style={{ color: ColorTheme.Laranja }}> {i.parcel}x </Text>
-                                                        de
-                                                        <Text style={{ color: ColorTheme.Laranja }}> R$ {i.value_parcel} </Text>sem juros
-                                                    </LabelInfo>
-                                                </ContentLocation>
-                                            )
-                                        })}
-                                    </>
-                                )}
-                            </ContentInfo>
-                        )
-                    })}
+                        {ApiDevices.devices.map(item => {
+                            if (`"${item.code}"` == phone) return (
+                                <ContentInfo key={item.id} style={shadow}>
+                                    <Text>{item.name}</Text>
+                                    {item.location == false || Store == 'unik' ? (
+                                        <ContentLocation>
+                                            {handleLocation(item)}
+                                        </ContentLocation>
+                                    ) : (
+                                        <>
+                                            {ApiLocation.locations.map(i => {
+                                                if (i.store == Store && `"${i.code}"` == phone) return (
+                                                    <ContentLocation key={i.id}>
+                                                        <Label>Preço à Vista:
+                                                            <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
+                                                        </Label>
+                                                        <Label>Preço à Prazo:
+                                                            <Text style={{ color: ColorTheme.Azul }}> R$ {i.term_price}</Text>
+                                                        </Label>
+                                                        <LabelInfo>em
+                                                            <Text style={{ color: ColorTheme.Laranja }}> {i.parcel}x </Text>
+                                                            de
+                                                            <Text style={{ color: ColorTheme.Laranja }}> R$ {i.value_parcel} </Text>sem juros
+                                                        </LabelInfo>
+                                                    </ContentLocation>
+                                                )
+                                            })}
+                                        </>
+                                    )}
+                                </ContentInfo>
+                            )
+                        })}
+                    </ImageBackground>
                 </Content>
             ) : (
                 <Content>

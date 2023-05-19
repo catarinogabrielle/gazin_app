@@ -53,10 +53,10 @@ align-items: center;
 `;
 
 export const ContentInfo = styled.View`
-padding: 52px 10px;
-margin: 35px 16px 0 16px;
+padding: 55px 10px;
+margin: 20px 16px 0 16px;
 align-items: center;
-background: #F3F9FF;
+background: ${ColorTheme.Branco3};
 border-radius: 10px;
 `;
 
