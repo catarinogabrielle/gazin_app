@@ -4,10 +4,10 @@
             "id": 1,
             "name": "Samsung Galaxy S21 FE",
             "code": "SM-G990E",
-            "cash_price": "2.299,00",
-            "term_price": "2.829,68",
+            "cash_price": "2.509,00",
+            "term_price": "2.697,85",
             "parcel": "12",
-            "value_parcel": "54,89",
+            "value_parcel": "224,82",
             "location": true
         },
         {
@@ -18,7 +18,7 @@
             "term_price": "1.800,50",
             "parcel": "10",
             "value_parcel": "64,00",
-            "location": false
+            "location": true
         },
         {
             "id": 3,

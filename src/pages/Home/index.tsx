@@ -4,6 +4,9 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import * as Location from 'expo-location';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import ApiDevices from '../../../contexts/devices.json';
+import ApiLocation from '../../../contexts/location.json';
+
 import {
     Container,
     Header,
