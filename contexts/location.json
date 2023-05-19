@@ -12,7 +12,7 @@
             "parcel": "11",
             "value_parcel": "74,89",
             "street": "Amphitheatre Parkway",
-            "street_number": "1600"
+            "postalCode": "1600"
         },
         {
             "id": 4,
@@ -26,7 +26,7 @@
             "parcel": "12",
             "value_parcel": "939,00",
             "street": "Rua Um Ou do Perimetro",
-            "street_number": "85"
+            "postalCode": "85"
         },
         {
             "id": 6,
@@ -40,7 +40,21 @@
             "parcel": "12",
             "value_parcel": "939,00",
             "street": "Rua Projetada M",
-            "street_number": "85"
+            "postalCode": "85"
+        },
+        {
+            "id": 8,
+            "code": "SM-G9600",
+            "region": "Paraná",
+            "city": "Douradina",
+            "store": "Gazin Douradina - Av. Brasil",
+            "id_store": "10015",
+            "cash_price": "938,00",
+            "term_price": "1.009,68",
+            "parcel": "12",
+            "value_parcel": "939,00",
+            "street": "Rua Um Ou do Perimetro",
+            "postalCode": "85"
         }
     ]
 }

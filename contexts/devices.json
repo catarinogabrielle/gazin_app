@@ -30,5 +30,16 @@
             "value_parcel": "83,22",
             "location": true
         }
+        ,
+        {
+            "id": 7,
+            "name": "Celular Jozé",
+            "code": "SM-G9600",
+            "cash_price": "1.069,10",
+            "term_price": "1.410,20",
+            "parcel": "7",
+            "value_parcel": "83,22",
+            "location": true
+        }
     ]
 }
