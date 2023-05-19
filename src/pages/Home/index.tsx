@@ -76,9 +76,8 @@ export default function Home() {
     const [location, setLocation] = useState({})
     const [region, setRegion] = useState({})
     const [street, setStret] = useState({})
-    const [Store, setStore] = useState('unik')
+    const [store, setStore] = useState('')
     const [visibleModal, setVisibleModal] = useState(false)
-    const [menu, setMenu] = useState(true)
 
     useEffect(() => {
         const getPermissions = async () => {
@@ -155,13 +154,9 @@ export default function Home() {
                     if (`"${item.code}"` == phone) return (
                         <View key={item.id}>
                             {item.location == true && (
-                                <>
-                                    {menu && (
-                                        <ContentMenu onPress={() => setVisibleModal(true)}>
-                                            <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
-                                        </ContentMenu>
-                                    )}
-                                </>
+                                <ContentMenu onPress={() => setVisibleModal(true)}>
+                                    <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
+                                </ContentMenu>
                             )}
                         </View>
                     )
@@ -185,7 +180,7 @@ export default function Home() {
                             if (`"${item.code}"` == phone) return (
                                 <ContentInfo key={item.id} style={shadow}>
                                     <Text>{item.name}</Text>
-                                    {item.location == false || Store == 'unik' ? (
+                                    {item.location == false || store == 'unik' ? (
                                         <ContentLocation>
                                             {handleLocation(item)}
                                         </ContentLocation>
@@ -237,7 +232,6 @@ export default function Home() {
                                 <BoxStore onPress={() => {
                                     setStore('unik')
                                     setVisibleModal(false)
-                                    setMenu(false)
                                 }}>
                                     <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
                                     <NameStore>Valor Nacional</NameStore>
@@ -247,7 +241,6 @@ export default function Home() {
                                         <BoxStore key={i.id} onPress={() => {
                                             setStore(i.store)
                                             setVisibleModal(false)
-                                            setMenu(false)
                                         }}>
                                             <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
                                             <NameStore>{i.store}</NameStore>
