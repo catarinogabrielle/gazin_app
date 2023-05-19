@@ -12,7 +12,7 @@
             "parcel": "11",
             "value_parcel": "74,89",
             "street": "Amphitheatre Parkway",
-            "postalCode": "1600"
+            "postal_code": "1600"
         },
         {
             "id": 4,
@@ -26,7 +26,7 @@
             "parcel": "12",
             "value_parcel": "939,00",
             "street": "Rua Um Ou do Perimetro",
-            "postalCode": "85"
+            "postal_code": "85"
         },
         {
             "id": 6,
@@ -40,7 +40,7 @@
             "parcel": "12",
             "value_parcel": "939,00",
             "street": "Rua Projetada M",
-            "postalCode": "85"
+            "postal_code": "85"
         },
         {
             "id": 8,
@@ -54,7 +54,7 @@
             "parcel": "12",
             "value_parcel": "939,00",
             "street": "Rua Um Ou do Perimetro",
-            "postalCode": "85"
+            "postal_code": "85"
         }
     ]
 }
