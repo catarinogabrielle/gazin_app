@@ -11,7 +11,7 @@
             "location": true
         },
         {
-            "id": 3,
+            "id": 2,
             "name": "Smartphone Samsung Galaxy A22 SM-A225M Dual SIM 128GB",
             "code": "SM-A225M",
             "cash_price": "1.199,00",
@@ -21,7 +21,7 @@
             "location": true
         },
         {
-            "id": 5,
+            "id": 3,
             "name": "Celular Gabi",
             "code": "SM-G990E",
             "cash_price": "1.069,10",
@@ -32,7 +32,7 @@
         }
         ,
         {
-            "id": 7,
+            "id": 4,
             "name": "Celular Jozé",
             "code": "SM-G9600",
             "cash_price": "1.069,10",

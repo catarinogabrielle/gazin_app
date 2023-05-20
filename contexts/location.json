@@ -1,7 +1,7 @@
 {
     "locations": [
         {
-            "id": 2,
+            "id": 1,
             "code": "sdk_gphone_x86",
             "region": "California",
             "city": "Santa Clara County",
@@ -12,10 +12,10 @@
             "parcel": "11",
             "value_parcel": "74,89",
             "street": "Amphitheatre Parkway",
-            "postal_code": "1600"
+            "postal_code": "94043"
         },
         {
-            "id": 4,
+            "id": 2,
             "code": "SM-A225M",
             "region": "Paraná",
             "city": "Douradina",
@@ -29,7 +29,7 @@
             "postal_code": "87485-000"
         },
         {
-            "id": 6,
+            "id": 3,
             "code": "SM-G990E",
             "region": "Paraná",
             "city": "Douradina",
@@ -43,7 +43,7 @@
             "postal_code": "87114-476"
         },
         {
-            "id": 8,
+            "id": 4,
             "code": "SM-G9600",
             "region": "Paraná",
             "city": "Douradina",

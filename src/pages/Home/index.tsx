@@ -6,6 +6,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import ApiDevices from '../../../contexts/devices.json';
 import ApiLocation from '../../../contexts/location.json';
+import ApiVideos from '../../../contexts/videos.json';
+import ApiLive from '../../../contexts/live.json';
 
 import {
     Container,
@@ -16,6 +18,7 @@ import {
     ContentMenu,
     Content,
     BoxVideo,
+    BoxLive,
     ContentInfo,
     Text,
     Label,
@@ -148,6 +151,20 @@ export default function Home() {
         )
     }
 
+    function handleVideo(items: any) {
+        if (`"${items.code}"` == phone) return (
+            <>
+                <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                <YoutubePlayer
+                    width="100%"
+                    height={222}
+                    videoId={items.video}
+                    play={true}
+                />
+            </>
+        )
+    }
+
     return (
         <Container>
             <Header>
@@ -171,15 +188,29 @@ export default function Home() {
             {apiLocation && apiDevices ? (
                 <Content>
                     <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
-                        <BoxVideo>
-                            <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                            <YoutubePlayer
-                                width="100%"
-                                height={222}
-                                videoId={"eb6E1oIHdJI"}
-                                play={true}
-                            />
-                        </BoxVideo>
+                        {ApiLive.live.map(e => (
+                            <BoxVideo key={e.id}>
+                                {e.live == true ? (
+                                    <BoxLive>
+                                        <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                                        <YoutubePlayer
+                                            width="100%"
+                                            height={222}
+                                            videoId={e.video}
+                                            play={true}
+                                        />
+                                    </BoxLive>
+                                ) : (
+                                    <>
+                                        {ApiVideos.videos.map(items => (
+                                            <BoxLive key={items.id}>
+                                                {handleVideo(items)}
+                                            </BoxLive>
+                                        ))}
+                                    </>
+                                )}
+                            </BoxVideo>
+                        ))}
 
                         {ApiDevices.devices.map(item => {
                             if (`"${item.code}"` == phone) return (

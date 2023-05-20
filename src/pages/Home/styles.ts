@@ -50,6 +50,11 @@ display: flex;
 `;
 
 export const BoxVideo = styled.View`
+display: flex;
+`;
+
+export const BoxLive = styled.View`
+display: flex;
 align-items: center;
 `;
 
