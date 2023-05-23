@@ -2,27 +2,39 @@
     "videos": [
         {
             "id": 1,
-            "brand": "Nexus",
+            "brand": "SAMSUNG CELULAR",
             "code": "sdk_gphone_x86",
             "video": "eb6E1oIHdJI"
         },
         {
             "id": 2,
-            "brand": "Samsung",
-            "code": "SM-A225M",
+            "brand": "APPLE ",
+            "code": "SM-G990E",
             "video": "pb6OvvSi8Qk"
         },
         {
             "id": 3,
-            "brand": "Samsung",
+            "brand": "VIVO",
             "code": "SM-G990E",
             "video": "pb6OvvSi8Qk"
         },
         {
             "id": 4,
-            "brand": "Samsung",
-            "code": "SM-G9600",
-            "video": "eb6E1oIHdJI"
+            "brand": "CLARO",
+            "code": "SM-G990E",
+            "video": "pb6OvvSi8Qk"
+        },
+        {
+            "id": 4,
+            "brand": "PANASONIC - TELEFONIA FIXA",
+            "code": "SM-G990E",
+            "video": "pb6OvvSi8Qk"
+        },
+        {
+            "id": 5,
+            "brand": "MULTILASER CELULAR",
+            "code": "SM-G990E",
+            "video": "pb6OvvSi8Qk"
         }
     ]
 }

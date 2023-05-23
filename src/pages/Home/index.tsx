@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Platform, Modal, ScrollView, View, ImageBackground } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
-import * as Location from 'expo-location';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Picker } from '@react-native-picker/picker';
 
 import ApiDevices from '../../../contexts/devices.json';
-import ApiLocation from '../../../contexts/location.json';
 import ApiVideos from '../../../contexts/videos.json';
 import ApiLive from '../../../contexts/live.json';
+
+import JsonApi from '../../../contexts/Json.json';
 
 import {
     Container,
@@ -15,7 +15,6 @@ import {
     ContentLogo,
     Logo,
     TextLogo,
-    ContentMenu,
     Content,
     BoxVideo,
     BoxLive,
@@ -24,41 +23,25 @@ import {
     Label,
     LabelInfo,
     ContentLocation,
-    ContainerModal,
-    ContainerModalOpacity,
-    ContentModal,
-    BoxStreet,
-    Street,
-    TouchableClosed,
-    BoxStore,
-    NameStore
+    ContentInfo2,
+    Title,
+    ButtonPicker
 } from './styles';
 
 import Colors from '../../../constants/Colors';
 const ColorTheme = Colors['Theme'];
 
-type DeviceProps = {
+type LiveProps = {
     id: string,
-    name: string,
-    code: string,
-    cash_price: string,
-    term_price: string,
-    parcel: string,
-    value_parcel: string,
-    location: boolean
+    live: boolean,
+    video: string
 }
 
-type LocationProps = {
+type VideoProps = {
     id: string,
+    brand: string,
     code: string,
-    region: string,
-    city: string,
-    store: string,
-    id_store: number,
-    cash_price: string,
-    term_price: string,
-    parcel: string,
-    value_parcel: string
+    video: string
 }
 
 import { api } from '../../services/api'
@@ -75,222 +58,189 @@ var shadow = {
 }
 
 export default function Home() {
-    const [phone, setPhone] = useState('')
-    const [apiLocation, setApiLocation] = useState<LocationProps[] | []>([])
-    const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
-    const [location, setLocation] = useState({})
-    const [region, setRegion] = useState({})
-    const [street, setStret] = useState({})
-    const [postalCode, setPostalCode] = useState({})
-    const [store, setStore] = useState('')
-    const [visibleModal, setVisibleModal] = useState(false)
-
-    useEffect(() => {
-        const getPermissions = async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync()
-            if (status != 'granted') {
-                console.log('Please grant locationn permissions')
-                return;
-            }
-
-            let currentLocation = await Location.getCurrentPositionAsync({})
-            setLocation(currentLocation)
-            const reversegeocodedLocation = await Location.reverseGeocodeAsync({
-                longitude: currentLocation.coords.longitude,
-                latitude: currentLocation.coords.latitude,
-            })
-            const regions = reversegeocodedLocation.map(item => item.region)
-            setRegion(regions)
-            const street = reversegeocodedLocation.map(item => item.street)
-            setStret(street)
-            const postalCode = reversegeocodedLocation.map(item => item.postalCode)
-            setPostalCode(postalCode)
-        }
-
-        getPermissions()
-    }, [region, visibleModal])
-
-    useEffect(() => {
-        const platform = JSON.stringify(Platform.constants.Model, null, 2)
-        setPhone(platform)
-    }, [phone, region])
-    /*
+    const [apiLive, setApiLive] = useState<LiveProps[] | []>([])
+    const [apiVideo, setApiVideos] = useState<VideoProps[] | []>([])
+    const [Json, setJson] = useState(false)
+    const [branch, setBranch] = useState('Filial')
+    const [brand, setBrand] = useState('Marca')
+    const [product, setProduct] = useState('Modelo')
+    const [color, setColor] = useState('Cor')
+    /** 
         useEffect(() => {
             async function loadingDevice() {
-                const response = await api.get('device')
-                setApiDevices(response.data)
+                const response = await api.get('video')
+                setApiVideos(response.data)
             }
     
             loadingDevice()
-        }, [region])
+        }, [])
     
         useEffect(() => {
             async function loadingDevice() {
-                const response = await api.get('location')
-                setApiLocation(response.data)
+                const response = await api.get('live')
+                setApiLive(response.data)
             }
     
             loadingDevice()
-        }, [region])
+        }, [])
     */
-    function handleLocation(item: any) {
-        return (
-            <>
-                <Label>Preço à Vista:
-                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.cash_price}</Text>
-                </Label>
-                <Label>Preço à Prazo:
-                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.term_price}</Text>
-                </Label>
-                <LabelInfo>em
-                    <Text style={{ color: ColorTheme.Laranja }}> {item.parcel}x </Text>
-                    de
-                    <Text style={{ color: ColorTheme.Laranja }}> R$ {item.value_parcel} </Text>sem juros
-                </LabelInfo>
-            </>
-        )
-    }
-
-    function handleVideo(items: any) {
-        if (`"${items.code}"` == phone) return (
-            <>
-                <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                <YoutubePlayer
-                    width="100%"
-                    height={222}
-                    videoId={items.video}
-                    play={true}
-                />
-            </>
-        )
-    }
 
     return (
         <Container>
-            <Header>
-                <ContentLogo>
-                    <Logo source={require('../../assets/logogazin.png')} />
-                    <TextLogo>Seja Bem Vindo (a)</TextLogo>
-                </ContentLogo>
-                {ApiDevices.devices.map(item => {
-                    if (`"${item.code}"` == phone) return (
-                        <View key={item.id}>
-                            {item.location == true && (
-                                <ContentMenu onPress={() => setVisibleModal(true)}>
-                                    <Ionicons name="menu" size={28} color={ColorTheme.Branco3} />
-                                </ContentMenu>
-                            )}
-                        </View>
-                    )
-                })}
-            </Header>
+            {Json == true ? (
+                <>
+                    <Header>
+                        <ContentLogo>
+                            <Logo source={require('../../assets/logogazin.png')} />
+                            <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                        </ContentLogo>
+                    </Header>
 
-            {apiLocation && apiDevices ? (
-                <Content>
-                    <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
-                        {ApiLive.live.map(e => (
-                            <BoxVideo key={e.id}>
-                                {e.live == true ? (
-                                    <BoxLive>
-                                        <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                                        <YoutubePlayer
-                                            width="100%"
-                                            height={222}
-                                            videoId={e.video}
-                                            play={true}
-                                        />
-                                    </BoxLive>
-                                ) : (
-                                    <>
-                                        {ApiVideos.videos.map(items => (
-                                            <BoxLive key={items.id}>
-                                                {handleVideo(items)}
+                    {JsonApi ? (
+                        <Content>
+                            <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
+                                {ApiLive.live.map(e => (
+                                    <BoxVideo key={e.id}>
+                                        {e.live == true ? (
+                                            <BoxLive>
+                                                <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                                                <YoutubePlayer
+                                                    width="100%"
+                                                    height={222}
+                                                    videoId={e.video}
+                                                    play={true}
+                                                />
                                             </BoxLive>
-                                        ))}
-                                    </>
-                                )}
-                            </BoxVideo>
-                        ))}
+                                        ) : (
+                                            <>
+                                                {ApiVideos.videos.map(items => {
+                                                    if (brand == items.brand) return (
+                                                        <BoxLive key={items.id}>
+                                                            <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                                                            <YoutubePlayer
+                                                                width="100%"
+                                                                height={222}
+                                                                videoId={items.video}
+                                                                play={true}
+                                                            />
+                                                        </BoxLive>
+                                                    )
+                                                })}
+                                            </>
+                                        )}
+                                    </BoxVideo>
+                                ))}
 
-                        {ApiDevices.devices.map(item => {
-                            if (`"${item.code}"` == phone) return (
-                                <ContentInfo key={item.id} style={shadow}>
-                                    <Text>{item.name}</Text>
-                                    {item.location == false || store == 'unik' ? (
-                                        <ContentLocation>
-                                            {handleLocation(item)}
-                                        </ContentLocation>
-                                    ) : (
-                                        <>
-                                            {ApiLocation.locations.map(i => {
-                                                if (i.postal_code == postalCode && `"${i.code}"` == phone) return (
-                                                    <ContentLocation key={i.id}>
-                                                        <Label>Preço à Vista:
-                                                            <Text style={{ color: ColorTheme.Azul }}> R$ {i.cash_price}</Text>
-                                                        </Label>
-                                                        <Label>Preço à Prazo:
-                                                            <Text style={{ color: ColorTheme.Azul }}> R$ {i.term_price}</Text>
-                                                        </Label>
-                                                        <LabelInfo>em
-                                                            <Text style={{ color: ColorTheme.Laranja }}> {i.parcel}x </Text>
-                                                            de
-                                                            <Text style={{ color: ColorTheme.Laranja }}> R$ {i.value_parcel} </Text>sem juros
-                                                        </LabelInfo>
-                                                    </ContentLocation>
-                                                )
-                                            })}
-                                        </>
-                                    )}
-                                </ContentInfo>
-                            )
-                        })}
-                    </ImageBackground>
-                </Content>
-            ) : (
-                <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                </Content>
-            )}
-
-            <Modal
-                visible={visibleModal}
-                transparent={true}
-                onRequestClose={() => setVisibleModal(false)}
-                animationType="slide"
-            >
-                <ContainerModal>
-                    <ContainerModalOpacity>
-                        <ContentModal>
-                            <BoxStreet>
-                                <Street>{street}, {postalCode}</Street>
-                                <TouchableClosed onPress={() => setVisibleModal(false)}>
-                                    <Ionicons name="close" size={28} color={ColorTheme.Branco5} />
-                                </TouchableClosed>
-                            </BoxStreet>
-                            <ScrollView style={{ width: "100%" }}>
-                                <BoxStore onPress={() => {
-                                    setStore('unik')
-                                    setVisibleModal(false)
-                                }}>
-                                    <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
-                                    <NameStore>Valor Nacional</NameStore>
-                                </BoxStore>
-                                {ApiLocation.locations.map(i => {
-                                    if (i.postal_code == postalCode && `"${i.code}"` == phone) return (
-                                        <BoxStore key={i.id} onPress={() => {
-                                            setStore(i.store)
-                                            setVisibleModal(false)
-                                        }}>
-                                            <Ionicons name="md-location-outline" size={16} color={ColorTheme.Azul} />
-                                            <NameStore>{i.store}</NameStore>
-                                        </BoxStore>
+                                {JsonApi.map(item => {
+                                    if (product == item.produto && branch == item.idsubdepartamento && color == item.cor) return (
+                                        <ContentInfo style={shadow}>
+                                            <Text>{item.produto} - {item.cor}</Text>
+                                            <ContentLocation>
+                                                <Label>Preço à Vista:
+                                                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.precovenda}</Text>
+                                                </Label>
+                                                <Label>Preço à Prazo:
+                                                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.precoaprazo}</Text>
+                                                </Label>
+                                                <LabelInfo>em
+                                                    <Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>
+                                                    de
+                                                    <Text style={{ color: ColorTheme.Laranja }}> R$ {item.prazofinal} </Text>sem juros
+                                                </LabelInfo>
+                                            </ContentLocation>
+                                        </ContentInfo>
                                     )
                                 })}
-                            </ScrollView>
-                        </ContentModal>
-                    </ContainerModalOpacity>
-                </ContainerModal>
-            </Modal>
+                            </ImageBackground>
+                        </Content>
+                    ) : (
+                        <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
+                        </Content>
+                    )}
+                </>
+            ) : (
+                <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
+                    <ContentInfo2>
+                        <Title>Selecione as opções:</Title>
+                        <Picker
+                            style={branch == 'Filial' ? styles.container : styles.containerSelect}
+                            selectedValue={branch}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setBranch(itemValue)
+                            }>
+                            <Picker.Item label="Filial" value="Filial" />
+                            {JsonApi.map(item => (
+                                <Picker.Item label={item.idsubdepartamento} value={item.idsubdepartamento} />
+                            ))}
+                        </Picker>
+
+                        <Picker
+                            style={brand == 'Marca' ? styles.container : styles.containerSelect}
+                            selectedValue={brand}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setBrand(itemValue)
+                            }>
+                            <Picker.Item label="Marca" value="Marca" />
+                            {JsonApi.map(item => (
+                                <Picker.Item label={item.marca} value={item.marca} />
+                            ))}
+                        </Picker>
+
+                        <Picker
+                            style={product == 'Modelo' ? styles.container : styles.containerSelect}
+                            selectedValue={product}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setProduct(itemValue)
+                            }>
+                            <Picker.Item label="Modelo" value="Modelo" />
+                            {JsonApi.map(item => (
+                                <Picker.Item label={item.produto} value={item.produto} />
+                            ))}
+                        </Picker>
+
+                        <Picker
+                            style={color == 'Cor' ? styles.container : styles.containerSelect}
+                            selectedValue={color}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setColor(itemValue)
+                            }>
+                            <Picker.Item label="Cor" value="Cor" />
+                            {JsonApi.map(item => (
+                                <Picker.Item label={item.cor} value={item.cor} />
+                            ))}
+                        </Picker>
+
+                        {branch == 'Filial' || brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (
+                            <ButtonPicker
+                                title="Filtrar"
+                                color="#b1b1b1"
+                                accessibilityLabel="Learn more about this purple button"
+                            />
+                        ) : (
+                            <ButtonPicker
+                                onPress={() => setJson(true)}
+                                title="Filtrar"
+                                color="#6d057d"
+                                accessibilityLabel="Learn more about this purple button"
+                            />
+                        )}
+                    </ContentInfo2>
+                </ImageBackground>
+            )}
         </Container>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        color: ColorTheme.Cinza,
+        marginBottom: 15,
+        backgroundColor: ColorTheme.Branco3,
+    },
+    containerSelect: {
+        color: ColorTheme.Branco3,
+        marginBottom: 15,
+        backgroundColor: ColorTheme.Azul,
+    },
+});
