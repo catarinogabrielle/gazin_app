@@ -55,9 +55,8 @@ align-items: center;
 `;
 
 export const ContentInfo = styled.View`
-padding: 55px 10px;
-margin: 20px 16px 0 16px;
-align-items: center;
+padding: 35px 25px;
+margin: 20px 16px 20px 16px;
 background: ${ColorTheme.Branco3};
 border-radius: 10px;
 `;
@@ -66,7 +65,6 @@ export const Text = styled.Text`
 color: ${ColorTheme.Preto};
 font-size: 21px;
 font-weight: 700;
-text-align: center;
 text-transform: uppercase;
 margin-bottom: 12px;
 font-family: Roboto;
@@ -80,23 +78,15 @@ margin-top: 22px;
 font-family: Roboto;
 `;
 
-export const LabelInfo = styled.Text`                                    
-color: ${ColorTheme.Preto};
-font-size: 19px;
-font-weight: 300;
-margin-top: 4px;
-font-family: Roboto;
-`;
-
 export const ContentLocation = styled.View`
-align-items: center;
+display: flex;
 `;
 
 export const ContentInfo2 = styled.View`
 display: flex;
 flex: 1;
 padding: 0 20px;
-margin-top: 65px;
+margin-top: 50px;
 `;
 
 export const Title = styled.Text`                                    

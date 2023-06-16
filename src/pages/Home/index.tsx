@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from 'react-native';
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from '@react-native-picker/picker';
 
-import ApiDevices from '../../../contexts/devices.json';
 import ApiVideos from '../../../contexts/videos.json';
 import ApiLive from '../../../contexts/live.json';
+import device from '../../../contexts/device.json';
 
 import JsonApi from '../../../contexts/Json.json';
 
@@ -21,7 +21,6 @@ import {
     ContentInfo,
     Text,
     Label,
-    LabelInfo,
     ContentLocation,
     ContentInfo2,
     Title,
@@ -44,7 +43,45 @@ type VideoProps = {
     video: string
 }
 
-import { api } from '../../services/api'
+type DeviceProps = {
+    codigofabricante: string,
+    cor: string,
+    datafinal: string,
+    datainicial: string,
+    departamento: string,
+    estoque: string,
+    iddepartamento: boolean,
+    idgradex: boolean,
+    idgradey: boolean,
+    idproduto: string,
+    idpromocao: boolean,
+    idpromocaoccg: boolean,
+    idpromocaoprodutograde: boolean,
+    idsubdepartamento: string,
+    idtipovendapromocao: boolean,
+    isdepartamento: boolean,
+    jurocomposto: string,
+    juromes: string,
+    jurosano: string,
+    marca: string,
+    ordem: string,
+    prazofinal: boolean,
+    prazoinicial: boolean,
+    precoaprazo: string,
+    precopartida: string,
+    precovenda: string,
+    prioridade: boolean,
+    produto: string,
+    promocao: string,
+    promocaoccg: string,
+    subdepartamento: string,
+    tipo: string,
+    tipoprazopromocao: string,
+    tipovendapromocao: string,
+    voltagem: string,
+}
+
+import { ApiDevices } from '../../services/apiDevices'
 
 var shadow = {
     elevation: 3,
@@ -60,8 +97,10 @@ var shadow = {
 export default function Home() {
     const [apiLive, setApiLive] = useState<LiveProps[] | []>([])
     const [apiVideo, setApiVideos] = useState<VideoProps[] | []>([])
+    const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
     const [Json, setJson] = useState(false)
-    const [branch, setBranch] = useState('Filial')
+    const [filtro, setFiltro] = useState(false)
+    const [branch, setBranch] = useState('10002')
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
@@ -85,6 +124,30 @@ export default function Home() {
         }, [])
     */
 
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await ApiDevices.get(`/celulares?idfilial=10002&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`)
+            setApiDevices(response.data)
+        }
+
+        loadingDevice()
+    }, [branch, Json, filtro])
+
+    const Marca = apiDevices.map(item => item.marca)
+    const uniqueMarcaList = [...new Set(Marca)]
+
+    const Produto = apiDevices.map(item => item.produto)
+    const uniqueProdutoList = [...new Set(Produto)]
+
+    const Cor = apiDevices.map(item => item.cor)
+    const uniqueCorList = [...new Set(Cor)]
+
+    const Device = apiDevices.map(item => item)
+    const uniqueDeviceList = [...new Set(Device)]
+
+    var date = new Date()
+    var dataFormatada = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).substr(-2) + "-" + ("0" + date.getDate()).substr(-2)
+
     return (
         <Container>
             {Json == true ? (
@@ -96,7 +159,7 @@ export default function Home() {
                         </ContentLogo>
                     </Header>
 
-                    {JsonApi ? (
+                    {apiDevices.length > 0 ? (
                         <Content>
                             <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
                                 {ApiLive.live.map(e => (
@@ -131,26 +194,28 @@ export default function Home() {
                                     </BoxVideo>
                                 ))}
 
-                                {JsonApi.map(item => {
-                                    if (product == item.produto && branch == item.idsubdepartamento && color == item.cor) return (
-                                        <ContentInfo style={shadow}>
-                                            <Text>{item.produto} - {item.cor}</Text>
-                                            <ContentLocation>
-                                                <Label>Preço à Vista:
-                                                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.precovenda}</Text>
-                                                </Label>
-                                                <Label>Preço à Prazo:
-                                                    <Text style={{ color: ColorTheme.Azul }}> R$ {item.precoaprazo}</Text>
-                                                </Label>
-                                                <LabelInfo>em
-                                                    <Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>
-                                                    de
-                                                    <Text style={{ color: ColorTheme.Laranja }}> R$ {item.prazofinal} </Text>sem juros
-                                                </LabelInfo>
-                                            </ContentLocation>
-                                        </ContentInfo>
-                                    )
-                                })}
+                                <ScrollView>
+                                    <ContentInfo style={shadow}>
+                                        <Text>{product} - {color}</Text>
+                                        <ContentLocation>
+                                            {device.device.map(item => {
+                                                if (dataFormatada < item.datafinal && item.tipo == 'A Vista') return (
+                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precovenda}</Text> (A Vista)</Label>
+                                                )
+                                            })}
+                                            {device.device.map(item => {
+                                                if (dataFormatada < item.datafinal && item.tipo == 'Cartão') return (
+                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no cartão.</Label>
+                                                )
+                                            })}
+                                            {device.device.map(item => {
+                                                if (dataFormatada < item.datafinal && item.tipo == 'Carteira') return (
+                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no carne. ({item.tipoprazopromocao})</Label>
+                                                )
+                                            })}
+                                        </ContentLocation>
+                                    </ContentInfo>
+                                </ScrollView>
                             </ImageBackground>
                         </Content>
                     ) : (
@@ -163,67 +228,78 @@ export default function Home() {
                 <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
                     <ContentInfo2>
                         <Title>Selecione as opções:</Title>
-                        <Picker
-                            style={branch == 'Filial' ? styles.container : styles.containerSelect}
-                            selectedValue={branch}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setBranch(itemValue)
-                            }>
-                            <Picker.Item label="Filial" value="Filial" />
-                            {JsonApi.map(item => (
-                                <Picker.Item label={item.idsubdepartamento} value={item.idsubdepartamento} />
-                            ))}
-                        </Picker>
+                        <TextInput
+                            style={filtro ? styles.inputFiltro : styles.input}
+                            onChangeText={setBranch}
+                            value={branch}
+                            placeholder="Filial"
+                            keyboardType="numeric"
+                        />
 
-                        <Picker
-                            style={brand == 'Marca' ? styles.container : styles.containerSelect}
-                            selectedValue={brand}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setBrand(itemValue)
-                            }>
-                            <Picker.Item label="Marca" value="Marca" />
-                            {JsonApi.map(item => (
-                                <Picker.Item label={item.marca} value={item.marca} />
-                            ))}
-                        </Picker>
-
-                        <Picker
-                            style={product == 'Modelo' ? styles.container : styles.containerSelect}
-                            selectedValue={product}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setProduct(itemValue)
-                            }>
-                            <Picker.Item label="Modelo" value="Modelo" />
-                            {JsonApi.map(item => (
-                                <Picker.Item label={item.produto} value={item.produto} />
-                            ))}
-                        </Picker>
-
-                        <Picker
-                            style={color == 'Cor' ? styles.container : styles.containerSelect}
-                            selectedValue={color}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setColor(itemValue)
-                            }>
-                            <Picker.Item label="Cor" value="Cor" />
-                            {JsonApi.map(item => (
-                                <Picker.Item label={item.cor} value={item.cor} />
-                            ))}
-                        </Picker>
-
-                        {branch == 'Filial' || brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (
+                        {filtro == true ? (null) : (
                             <ButtonPicker
-                                title="Filtrar"
-                                color="#b1b1b1"
-                                accessibilityLabel="Learn more about this purple button"
-                            />
-                        ) : (
-                            <ButtonPicker
-                                onPress={() => setJson(true)}
+                                onPress={() => setFiltro(true)}
                                 title="Filtrar"
                                 color="#6d057d"
                                 accessibilityLabel="Learn more about this purple button"
                             />
+                        )}
+
+                        {filtro == true && (
+                            <>
+                                <Picker
+                                    style={brand == 'Marca' ? styles.container : styles.containerSelect}
+                                    selectedValue={brand}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        setBrand(itemValue)
+                                    }>
+                                    <Picker.Item label="Marca" value="Marca" />
+                                    {uniqueMarcaList.map(item => {
+                                        return (
+                                            <Picker.Item key={item} value={item} label={item} />
+                                        )
+                                    })}
+                                </Picker>
+
+                                <Picker
+                                    style={product == 'Modelo' ? styles.container : styles.containerSelect}
+                                    selectedValue={product}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        setProduct(itemValue)
+                                    }>
+                                    <Picker.Item label="Modelo" value="Modelo" />
+                                    {uniqueProdutoList.map(item => (
+                                        <Picker.Item key={item} label={item} value={item} />
+                                    ))}
+                                </Picker>
+
+                                <Picker
+                                    style={color == 'Cor' ? styles.container2 : styles.containerSelect2}
+                                    selectedValue={color}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        setColor(itemValue)
+                                    }>
+                                    <Picker.Item label="Cor" value="Cor" />
+                                    {uniqueCorList.map(item => (
+                                        <Picker.Item key={item} label={item} value={item} />
+                                    ))}
+                                </Picker>
+
+                                {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (
+                                    <ButtonPicker
+                                        title="Filtrar"
+                                        color="#b1b1b1"
+                                        accessibilityLabel="Learn more about this purple button"
+                                    />
+                                ) : (
+                                    <ButtonPicker
+                                        onPress={() => setJson(true)}
+                                        title="Filtrar"
+                                        color="#6d057d"
+                                        accessibilityLabel="Learn more about this purple button"
+                                    />
+                                )}
+                            </>
                         )}
                     </ContentInfo2>
                 </ImageBackground>
@@ -235,12 +311,35 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         color: ColorTheme.Cinza,
-        marginBottom: 15,
+        marginTop: 15,
         backgroundColor: ColorTheme.Branco3,
     },
     containerSelect: {
         color: ColorTheme.Branco3,
+        marginTop: 15,
+        backgroundColor: ColorTheme.Azul,
+    },
+    container2: {
+        color: ColorTheme.Cinza,
+        marginTop: 15,
+        marginBottom: 15,
+        backgroundColor: ColorTheme.Branco3,
+    },
+    containerSelect2: {
+        color: ColorTheme.Branco3,
+        marginTop: 15,
         marginBottom: 15,
         backgroundColor: ColorTheme.Azul,
+    },
+    input: {
+        color: ColorTheme.Cinza,
+        marginBottom: 15,
+        backgroundColor: ColorTheme.Branco3,
+        padding: 12,
+    },
+    inputFiltro: {
+        color: ColorTheme.Branco3,
+        backgroundColor: ColorTheme.Azul,
+        padding: 12,
     },
 });
