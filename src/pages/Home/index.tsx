@@ -82,6 +82,7 @@ type DeviceProps = {
 }
 
 import { ApiDevices } from '../../services/apiDevices'
+import { Api } from '../../services/api'
 
 var shadow = {
     elevation: 3,
@@ -104,10 +105,10 @@ export default function Home() {
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
-    /** 
+
         useEffect(() => {
             async function loadingDevice() {
-                const response = await api.get('video')
+                const response = await Api.get('video')
                 setApiVideos(response.data)
             }
     
@@ -116,13 +117,12 @@ export default function Home() {
     
         useEffect(() => {
             async function loadingDevice() {
-                const response = await api.get('live')
+                const response = await Api.get('live')
                 setApiLive(response.data)
             }
     
             loadingDevice()
         }, [])
-    */
 
     useEffect(() => {
         async function loadingDevice() {
@@ -162,7 +162,7 @@ export default function Home() {
                     {apiDevices.length > 0 ? (
                         <Content>
                             <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
-                                {ApiLive.live.map(e => (
+                                {apiLive.map(e => (
                                     <BoxVideo key={e.id}>
                                         {e.live == true ? (
                                             <BoxLive>
@@ -176,7 +176,7 @@ export default function Home() {
                                             </BoxLive>
                                         ) : (
                                             <>
-                                                {ApiVideos.videos.map(items => {
+                                                {apiVideo.map(items => {
                                                     if (brand == items.brand) return (
                                                         <BoxLive key={items.id}>
                                                             <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -198,17 +198,17 @@ export default function Home() {
                                     <ContentInfo style={shadow}>
                                         <Text>{product} - {color}</Text>
                                         <ContentLocation>
-                                            {device.device.map(item => {
+                                            {uniqueDeviceList.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'A Vista') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precovenda}</Text> (A Vista)</Label>
                                                 )
                                             })}
-                                            {device.device.map(item => {
+                                            {uniqueDeviceList.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'Cartão') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no cartão.</Label>
                                                 )
                                             })}
-                                            {device.device.map(item => {
+                                            {uniqueDeviceList.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'Carteira') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no carne. ({item.tipoprazopromocao})</Label>
                                                 )
