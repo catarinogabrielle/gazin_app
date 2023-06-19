@@ -100,3 +100,10 @@ font-family: Roboto;
 export const ButtonPicker = styled.Button`
 display: flex;
 `;
+
+export const ButtonPickerDiv = styled.View`
+display: flex;
+align-items: center;
+background-color: #6d057d;
+padding: 8px 0;
+`;

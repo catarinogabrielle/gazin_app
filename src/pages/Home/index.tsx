@@ -3,6 +3,8 @@ import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView }
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from '@react-native-picker/picker';
 
+import device from '../../../contexts/device.json'
+
 import {
     Container,
     Header,
@@ -18,7 +20,8 @@ import {
     ContentLocation,
     ContentInfo2,
     Title,
-    ButtonPicker
+    ButtonPicker,
+    ButtonPickerDiv
 } from './styles';
 
 import Colors from '../../../constants/Colors';
@@ -33,7 +36,6 @@ type LiveProps = {
 type VideoProps = {
     id: string,
     brand: string,
-    code: string,
     video: string
 }
 
@@ -93,30 +95,32 @@ export default function Home() {
     const [apiLive, setApiLive] = useState<LiveProps[] | []>([])
     const [apiVideo, setApiVideos] = useState<VideoProps[] | []>([])
     const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
-    const [Json, setJson] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [teste, setTeste] = useState(false)
+    const [timeOut, setTimeOut] = useState(false)
     const [filtro, setFiltro] = useState(false)
     const [branch, setBranch] = useState('10002')
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
 
-        useEffect(() => {
-            async function loadingDevice() {
-                const response = await Api.get('video')
-                setApiVideos(response.data)
-            }
-    
-            loadingDevice()
-        }, [])
-    
-        useEffect(() => {
-            async function loadingDevice() {
-                const response = await Api.get('live')
-                setApiLive(response.data)
-            }
-    
-            loadingDevice()
-        }, [])
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await Api.get('video')
+            setApiVideos(response.data)
+        }
+
+        loadingDevice()
+    }, [])
+
+    useEffect(() => {
+        async function loadingDevice() {
+            const response = await Api.get('live')
+            setApiLive(response.data)
+        }
+
+        loadingDevice()
+    }, [timeOut])
 
     useEffect(() => {
         async function loadingDevice() {
@@ -125,7 +129,19 @@ export default function Home() {
         }
 
         loadingDevice()
-    }, [branch, Json, filtro])
+    }, [timeOut])
+
+    setTimeout(() => {
+        setTimeOut(!timeOut)
+    }, 5000)
+
+    function handleLoading() {
+        setTeste(true)
+
+        setTimeout(function () {
+            setLoading(true)
+        }, 1000)
+    }
 
     const Marca = apiDevices.map(item => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
@@ -144,7 +160,7 @@ export default function Home() {
 
     return (
         <Container>
-            {Json == true ? (
+            {loading ? (
                 <>
                     <Header>
                         <ContentLogo>
@@ -192,17 +208,17 @@ export default function Home() {
                                     <ContentInfo style={shadow}>
                                         <Text>{product} - {color}</Text>
                                         <ContentLocation>
-                                            {uniqueDeviceList.map(item => {
+                                            {device.device.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'A Vista') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precovenda}</Text> (A Vista)</Label>
                                                 )
                                             })}
-                                            {uniqueDeviceList.map(item => {
+                                            {device.device.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'Cartão') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no cartão.</Label>
                                                 )
                                             })}
-                                            {uniqueDeviceList.map(item => {
+                                            {device.device.map(item => {
                                                 if (dataFormatada < item.datafinal && item.tipo == 'Carteira') return (
                                                     <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no carne. ({item.tipoprazopromocao})</Label>
                                                 )
@@ -233,7 +249,7 @@ export default function Home() {
                         {filtro == true ? (null) : (
                             <ButtonPicker
                                 onPress={() => setFiltro(true)}
-                                title="Filtrar"
+                                title="Filtrar Filial"
                                 color="#6d057d"
                                 accessibilityLabel="Learn more about this purple button"
                             />
@@ -279,19 +295,21 @@ export default function Home() {
                                     ))}
                                 </Picker>
 
-                                {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (
-                                    <ButtonPicker
-                                        title="Filtrar"
-                                        color="#b1b1b1"
-                                        accessibilityLabel="Learn more about this purple button"
-                                    />
+                                {teste ? (
+                                    <ButtonPickerDiv>
+                                        <ActivityIndicator size={20} color={ColorTheme.Branco3} />
+                                    </ButtonPickerDiv>
                                 ) : (
-                                    <ButtonPicker
-                                        onPress={() => setJson(true)}
-                                        title="Filtrar"
-                                        color="#6d057d"
-                                        accessibilityLabel="Learn more about this purple button"
-                                    />
+                                    <>
+                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
+                                            <ButtonPicker
+                                                onPress={handleLoading}
+                                                title="Filtrar"
+                                                color="#6d057d"
+                                                accessibilityLabel="Learn more about this purple button"
+                                            />
+                                        )}
+                                    </>
                                 )}
                             </>
                         )}
