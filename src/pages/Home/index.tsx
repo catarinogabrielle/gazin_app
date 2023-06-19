@@ -3,12 +3,6 @@ import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView }
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from '@react-native-picker/picker';
 
-import ApiVideos from '../../../contexts/videos.json';
-import ApiLive from '../../../contexts/live.json';
-import device from '../../../contexts/device.json';
-
-import JsonApi from '../../../contexts/Json.json';
-
 import {
     Container,
     Header,
