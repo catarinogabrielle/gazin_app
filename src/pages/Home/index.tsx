@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { Picker } from '@react-native-picker/picker';
-
-import device from '../../../contexts/device.json'
+import { Picker } from "@react-native-picker/picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useSWR from "swr"
+import { Ionicons } from "@expo/vector-icons";
 
 import {
     Container,
     Header,
     ContentLogo,
     Logo,
+    ContentHeader,
     TextLogo,
     Content,
     BoxVideo,
@@ -21,64 +23,13 @@ import {
     ContentInfo2,
     Title,
     ButtonPicker,
-    ButtonPickerDiv
 } from './styles';
 
-import Colors from '../../../constants/Colors';
+import Colors from "../../../constants/Colors";
 const ColorTheme = Colors['Theme'];
 
-type LiveProps = {
-    id: string,
-    live: boolean,
-    video: string
-}
-
-type VideoProps = {
-    id: string,
-    brand: string,
-    video: string
-}
-
-type DeviceProps = {
-    codigofabricante: string,
-    cor: string,
-    datafinal: string,
-    datainicial: string,
-    departamento: string,
-    estoque: string,
-    iddepartamento: boolean,
-    idgradex: boolean,
-    idgradey: boolean,
-    idproduto: string,
-    idpromocao: boolean,
-    idpromocaoccg: boolean,
-    idpromocaoprodutograde: boolean,
-    idsubdepartamento: string,
-    idtipovendapromocao: boolean,
-    isdepartamento: boolean,
-    jurocomposto: string,
-    juromes: string,
-    jurosano: string,
-    marca: string,
-    ordem: string,
-    prazofinal: boolean,
-    prazoinicial: boolean,
-    precoaprazo: string,
-    precopartida: string,
-    precovenda: string,
-    prioridade: boolean,
-    produto: string,
-    promocao: string,
-    promocaoccg: string,
-    subdepartamento: string,
-    tipo: string,
-    tipoprazopromocao: string,
-    tipovendapromocao: string,
-    voltagem: string,
-}
-
-import { ApiDevices } from '../../services/apiDevices'
-import { Api } from '../../services/api'
+import { ApiDevices } from "../../services/apiDevices"
+import { Api } from "../../services/api"
 
 var shadow = {
     elevation: 3,
@@ -91,72 +42,177 @@ var shadow = {
     }
 }
 
+interface Product {
+    idproduto: number;
+    idgradex: number;
+    idgradey: number;
+    produto: string;
+    cor: string;
+    voltagem: string;
+    codigofabricante: string;
+    iddepartamento: number;
+    departamento: string;
+    idsubdepartamento: string;
+    subdepartamento: string;
+    marca: string;
+    precovenda: string;
+    estoque: string;
+    idpromocao: number;
+    idpromocaoccg: number;
+    promocaoccg: string;
+    promocao: string;
+    datainicial: string;
+    datafinal: string;
+    prazoinicial: number;
+    prazofinal: number;
+    precopartida: string;
+    precoaprazo: string;
+    ordem: number;
+    tipovendapromocao: string;
+    tipoprazopromocao: string;
+    tipo: string;
+    prioridade: number;
+    idpromocaoprodutograde: number;
+    idtipovendapromocao: number;
+    juromes: string;
+    jurosano: string;
+    jurocomposto: string;
+    isdepartamento: number;
+}
+
 export default function Home() {
-    const [apiLive, setApiLive] = useState<LiveProps[] | []>([])
-    const [apiVideo, setApiVideos] = useState<VideoProps[] | []>([])
-    const [apiDevices, setApiDevices] = useState<DeviceProps[] | []>([])
     const [loading, setLoading] = useState(false)
-    const [teste, setTeste] = useState(false)
-    const [timeOut, setTimeOut] = useState(false)
     const [filtro, setFiltro] = useState(false)
     const [branch, setBranch] = useState('10002')
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
 
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await Api.get('video')
-            setApiVideos(response.data)
-        }
-
-        loadingDevice()
-    }, [])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await Api.get('live')
-            setApiLive(response.data)
-        }
-
-        loadingDevice()
-    }, [timeOut])
-
-    useEffect(() => {
-        async function loadingDevice() {
-            const response = await ApiDevices.get(`/celulares?idfilial=10002&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`)
-            setApiDevices(response.data)
-        }
-
-        loadingDevice()
-    }, [timeOut])
-
-    setTimeout(() => {
-        setTimeOut(!timeOut)
-    }, 5000)
-
-    function handleLoading() {
-        setTeste(true)
-
-        setTimeout(function () {
-            setLoading(true)
-        }, 1000)
+    const data = {
+        branch,
+        brand,
+        product,
+        color
     }
 
-    const Marca = apiDevices.map(item => item.marca)
+    async function diveceItemsInfo() {
+        await AsyncStorage.setItem('@deviceitem', JSON.stringify(data))
+    }
+
+    useEffect(() => {
+        setLoading(true)
+
+        async function getDeviceStorage() {
+            const storageInfo = await AsyncStorage.getItem('@deviceitem')
+            let hasDevice = JSON.parse(storageInfo || '{}')
+
+            setLoading(false)
+
+            if (Object.keys(hasDevice).length > 0) {
+                setBranch(hasDevice.branch)
+                setBrand(hasDevice.brand)
+                setProduct(hasDevice.product)
+                setColor(hasDevice.color)
+
+                setLoading(true)
+            }
+        }
+
+        getDeviceStorage()
+    }, [])
+
+    async function removeItemValue() {
+        try {
+            await AsyncStorage.removeItem('@deviceitem')
+            setLoading(false)
+            return true
+        }
+        catch (exception) {
+            return false;
+        }
+    }
+
+    function useVideo() {
+        let address = `video`
+
+        const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
+        const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+
+        return {
+            video: data,
+            mutate
+        }
+    }
+
+    const { video } = useVideo()
+
+    function useLive() {
+        let address = `live`
+
+        const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
+        const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+
+        return {
+            live: data,
+            mutate
+        }
+    }
+
+    const { live } = useLive()
+
+    function useDevice() {
+        let address = `/celulares?idfilial=${branch}&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`
+
+        const fetcher = async (address: string) => await ApiDevices.get(address).then((res) => res.data)
+        const { data, error, isLoading, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+
+        return {
+            device: data,
+            isLoading,
+            isError: error,
+            mutate
+        }
+    }
+
+    const { device, isLoading } = useDevice()
+
+    const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
 
-    const Produto = apiDevices.map(item => item.produto)
+    const Produto = device?.map((item: { produto: any; }) => item.produto)
     const uniqueProdutoList = [...new Set(Produto)]
 
-    const Cor = apiDevices.map(item => item.cor)
+    const Cor = device?.map((item: { cor: any; }) => item.cor)
     const uniqueCorList = [...new Set(Cor)]
 
-    const Device = apiDevices.map(item => item)
-    const uniqueDeviceList = [...new Set(Device)]
+    function encontrarMenorPreco(
+        jsonData: any,
+        tipo: string
+    ): any {
+        const hoje = new Date()
+        const produtosFiltrados = jsonData.filter((produto: { produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
+            return (
+                produto.cor == color &&
+                produto.produto == product &&
+                produto.marca == brand &&
+                produto.tipo == tipo &&
+                new Date(produto.datafinal) > hoje
+            )
+        })
 
-    var date = new Date()
-    var dataFormatada = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).substr(-2) + "-" + ("0" + date.getDate()).substr(-2)
+        if (tipo == 'A Vista') {
+            produtosFiltrados.sort((a: { precovenda: string; }, b: { precovenda: string; }) => {
+                return parseFloat(a.precovenda) - parseFloat(b.precovenda)
+            })
+        }
+
+        if (tipo == 'Cartão' || tipo == 'Carteira')
+            produtosFiltrados.sort((a: { precoaprazo: string; }, b: { precoaprazo: string; }) => {
+                return parseFloat(a.precoaprazo) - parseFloat(b.precoaprazo)
+            })
+
+        return produtosFiltrados[0]
+    }
 
     return (
         <Container>
@@ -165,14 +221,17 @@ export default function Home() {
                     <Header>
                         <ContentLogo>
                             <Logo source={require('../../assets/logogazin.png')} />
-                            <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                            <ContentHeader>
+                                <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                                <Ionicons onPress={removeItemValue} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                            </ContentHeader>
                         </ContentLogo>
                     </Header>
 
-                    {apiDevices.length > 0 ? (
+                    {isLoading == false ? (
                         <Content>
                             <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
-                                {apiLive.map(e => (
+                                {live.map((e: { id: any; live: boolean; video: string | undefined; }) => (
                                     <BoxVideo key={e.id}>
                                         {e.live == true ? (
                                             <BoxLive>
@@ -182,11 +241,12 @@ export default function Home() {
                                                     height={222}
                                                     videoId={e.video}
                                                     play={true}
+                                                    loopPlaylists
                                                 />
                                             </BoxLive>
                                         ) : (
                                             <>
-                                                {apiVideo.map(items => {
+                                                {video.map((items: { brand: string; id: any; video: string | undefined; }) => {
                                                     if (brand == items.brand) return (
                                                         <BoxLive key={items.id}>
                                                             <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
@@ -195,6 +255,7 @@ export default function Home() {
                                                                 height={222}
                                                                 videoId={items.video}
                                                                 play={true}
+                                                                loopPlaylists
                                                             />
                                                         </BoxLive>
                                                     )
@@ -206,23 +267,19 @@ export default function Home() {
 
                                 <ScrollView>
                                     <ContentInfo style={shadow}>
-                                        <Text>{product} - {color}</Text>
+                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
+                                            <Text>{product} - {color}</Text>
+                                        )}
                                         <ContentLocation>
-                                            {device.device.map(item => {
-                                                if (dataFormatada < item.datafinal && item.tipo == 'A Vista') return (
-                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precovenda}</Text> (A Vista)</Label>
-                                                )
-                                            })}
-                                            {device.device.map(item => {
-                                                if (dataFormatada < item.datafinal && item.tipo == 'Cartão') return (
-                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no cartão.</Label>
-                                                )
-                                            })}
-                                            {device.device.map(item => {
-                                                if (dataFormatada < item.datafinal && item.tipo == 'Carteira') return (
-                                                    <Label key={item.idproduto}><Text style={{ color: ColorTheme.Azul }}>R$ {item.precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {item.prazofinal}x </Text>no carne. ({item.tipoprazopromocao})</Label>
-                                                )
-                                            })}
+                                            {encontrarMenorPreco(device, 'A Vista') && (
+                                                <Label key={encontrarMenorPreco(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'A Vista').precovenda}</Text> (A Vista)</Label>
+                                            )}
+                                            {encontrarMenorPreco(device, 'Cartão') && (
+                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'Cartão').precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                            )}
+                                            {encontrarMenorPreco(device, 'Carteira') && (
+                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'Carteira').precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                            )}
                                         </ContentLocation>
                                     </ContentInfo>
                                 </ScrollView>
@@ -232,7 +289,8 @@ export default function Home() {
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
                         </Content>
-                    )}
+                    )
+                    }
                 </>
             ) : (
                 <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
@@ -295,28 +353,20 @@ export default function Home() {
                                     ))}
                                 </Picker>
 
-                                {teste ? (
-                                    <ButtonPickerDiv>
-                                        <ActivityIndicator size={20} color={ColorTheme.Branco3} />
-                                    </ButtonPickerDiv>
-                                ) : (
-                                    <>
-                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
-                                            <ButtonPicker
-                                                onPress={handleLoading}
-                                                title="Filtrar"
-                                                color="#6d057d"
-                                                accessibilityLabel="Learn more about this purple button"
-                                            />
-                                        )}
-                                    </>
+                                {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
+                                    <ButtonPicker
+                                        onPress={() => { setLoading(true), diveceItemsInfo() }}
+                                        title="Filtrar"
+                                        color="#6d057d"
+                                        accessibilityLabel="Learn more about this purple button"
+                                    />
                                 )}
                             </>
                         )}
                     </ContentInfo2>
                 </ImageBackground>
             )}
-        </Container>
+        </Container >
     )
 }
 
