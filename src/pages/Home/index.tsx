@@ -11,7 +11,6 @@ import {
     Header,
     ContentLogo,
     Logo,
-    ContentHeader,
     TextLogo,
     Content,
     BoxVideo,
@@ -221,11 +220,9 @@ export default function Home() {
                     <Header>
                         <ContentLogo>
                             <Logo source={require('../../assets/logogazin.png')} />
-                            <ContentHeader>
-                                <TextLogo>Seja Bem Vindo (a)</TextLogo>
-                                <Ionicons onPress={removeItemValue} name="exit-outline" size={22} color={ColorTheme.Branco3} />
-                            </ContentHeader>
+                            <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
+                        <Ionicons onPress={removeItemValue} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (

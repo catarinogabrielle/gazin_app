@@ -28,15 +28,6 @@ width: 92px;
 height: 26px;
 `;
 
-export const ContentHeader = styled.View`
-display: flex;
-flex-direction: row;
-align-items: center;
-width: 100%;
-margin-top: 1px;
-margin-left: 10px;
-`;
-
 export const TextLogo = styled.Text`                                    
 color: ${ColorTheme.Branco3};
 font-size: 13px;
