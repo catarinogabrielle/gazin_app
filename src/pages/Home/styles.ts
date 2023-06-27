@@ -9,7 +9,7 @@ display: flex;
 
 export const Header = styled.View`     
 width: 100%;
-padding: 16px 10px 13px 10px;
+padding: 16px 13px 13px 10px;
 background-color:${ColorTheme.Azul};
 flex-direction: row;
 height: 60px;
