@@ -178,9 +178,6 @@ export default function Home() {
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
 
-    const Produto = device?.map((item: { produto: any; }) => item.produto)
-    const uniqueProdutoList = [...new Set(Produto)]
-
     const Cor = device?.map((item: { cor: any; }) => item.cor)
     const uniqueCorList = [...new Set(Cor)]
 
@@ -211,6 +208,26 @@ export default function Home() {
             })
 
         return produtosFiltrados[0]
+    }
+
+    function obterProdutoPorMarca(jsonData: any[], marca: string): string[] {
+        const produtoNomes: string[] = [];
+
+        for (const produto of jsonData) {
+            if (produto.marca === marca && !produtoNomes.includes(produto.produto)) {
+                produtoNomes.push(produto.produto);
+            }
+        }
+
+        return produtoNomes
+    }
+
+    function mask(input: string): string {
+        input = parseInt(input).toFixed(2)
+        input = input.toString().replace('.', ',')
+        const valor = input.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+
+        return 'R$ ' + valor
     }
 
     return (
@@ -269,13 +286,13 @@ export default function Home() {
                                         )}
                                         <ContentLocation>
                                             {encontrarMenorPreco(device, 'A Vista') && (
-                                                <Label key={encontrarMenorPreco(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'A Vista').precovenda}</Text> (A Vista)</Label>
+                                                <Label key={encontrarMenorPreco(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'A Vista').precovenda)}</Text> (A Vista)</Label>
                                             )}
                                             {encontrarMenorPreco(device, 'Cartão') && (
-                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'Cartão').precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Cartão').precoaprazo)}</Text>  Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                             )}
                                             {encontrarMenorPreco(device, 'Carteira') && (
-                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>R$ {encontrarMenorPreco(device, 'Carteira').precoaprazo}</Text>, Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Carteira').precoaprazo)}</Text>  Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                             )}
                                         </ContentLocation>
                                     </ContentInfo>
@@ -333,8 +350,10 @@ export default function Home() {
                                         setProduct(itemValue)
                                     }>
                                     <Picker.Item label="Modelo" value="Modelo" />
-                                    {uniqueProdutoList.map(item => (
-                                        <Picker.Item key={item} label={item} value={item} />
+
+                                    {obterProdutoPorMarca(device, brand).map(e => (
+                                        console.log(e),
+                                        <Picker.Item key={e} label={e} value={e} />
                                     ))}
                                 </Picker>
 
