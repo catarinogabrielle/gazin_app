@@ -64,7 +64,15 @@ color: ${ColorTheme.Preto};
 font-size: 21px;
 font-weight: 700;
 text-transform: uppercase;
-margin-bottom: 12px;
+font-family: Roboto;
+`;
+
+export const IdProduct = styled.Text`                                    
+color: ${ColorTheme.Branco5};
+font-size: 16px;
+font-weight: 200;
+text-transform: uppercase;
+margin-bottom: 10px;
 font-family: Roboto;
 `;
 

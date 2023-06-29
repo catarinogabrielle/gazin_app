@@ -17,6 +17,7 @@ import {
     BoxLive,
     ContentInfo,
     Text,
+    IdProduct,
     Label,
     ContentLocation,
     ContentInfo2,
@@ -192,7 +193,7 @@ export default function Home() {
                 produto.produto == product &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
-                new Date(produto.datafinal) > hoje
+                new Date(produto.datafinal) >= hoje
             )
         })
 
@@ -211,7 +212,7 @@ export default function Home() {
     }
 
     function obterProdutoPorMarca(jsonData: any[], marca: string): string[] {
-        const produtoNomes: string[] = [];
+        const produtoNomes: string[] = []
 
         for (const produto of jsonData) {
             if (produto.marca === marca && !produtoNomes.includes(produto.produto)) {
@@ -223,7 +224,7 @@ export default function Home() {
     }
 
     function mask(input: string): string {
-        input = parseInt(input).toFixed(2)
+        input = parseFloat(input).toFixed(2)
         input = input.toString().replace('.', ',')
         const valor = input.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 
@@ -282,17 +283,25 @@ export default function Home() {
                                 <ScrollView>
                                     <ContentInfo style={shadow}>
                                         {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
-                                            <Text>{product} - {color}</Text>
+                                            <>
+                                                <Text>{product} - {color}</Text>
+                                                <IdProduct>{encontrarMenorPreco(device, 'A Vista').idproduto}</IdProduct>
+                                            </>
                                         )}
                                         <ContentLocation>
+                                            {/*device.map((item: { cor: string; produto: string; marca: string; tipo: string; }) => {
+                                                if (item.cor == color && item.produto == product && item.marca == brand && item.tipo == 'A Vista') return (
+                                                    console.log(item)
+                                                )
+                                            })*/}
                                             {encontrarMenorPreco(device, 'A Vista') && (
                                                 <Label key={encontrarMenorPreco(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'A Vista').precovenda)}</Text> (A Vista)</Label>
                                             )}
                                             {encontrarMenorPreco(device, 'Cartão') && (
-                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Cartão').precoaprazo)}</Text>  Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                             )}
                                             {encontrarMenorPreco(device, 'Carteira') && (
-                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Carteira').precoaprazo)}</Text>  Parcela em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                             )}
                                         </ContentLocation>
                                     </ContentInfo>
@@ -337,22 +346,23 @@ export default function Home() {
                                     }>
                                     <Picker.Item label="Marca" value="Marca" />
                                     {uniqueMarcaList.map(item => {
-                                        return (
-                                            <Picker.Item key={item} value={item} label={item} />
-                                        )
+                                        if (item !== 'AMET PELICULAS')
+                                            return (
+                                                <Picker.Item key={item} value={item} label={item} />
+                                            )
                                     })}
                                 </Picker>
 
                                 <Picker
                                     style={product == 'Modelo' ? styles.container : styles.containerSelect}
                                     selectedValue={product}
+                                    numberOfLines={2}
                                     onValueChange={(itemValue, itemIndex) =>
                                         setProduct(itemValue)
                                     }>
                                     <Picker.Item label="Modelo" value="Modelo" />
 
                                     {obterProdutoPorMarca(device, brand).map(e => (
-                                        console.log(e),
                                         <Picker.Item key={e} label={e} value={e} />
                                     ))}
                                 </Picker>
@@ -419,5 +429,5 @@ const styles = StyleSheet.create({
         color: ColorTheme.Branco3,
         backgroundColor: ColorTheme.Azul,
         padding: 12,
-    },
+    }
 });
