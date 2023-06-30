@@ -167,8 +167,6 @@ export default function Home() {
                 return parseFloat(a.precoaprazo) - parseFloat(b.precoaprazo)
             })
 
-        console.log(produtosFiltrados[0])
-
         return produtosFiltrados[0]
     }
 
