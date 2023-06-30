@@ -23,6 +23,7 @@ import {
     ContentInfo2,
     Title,
     ButtonPicker,
+    Line,
 } from './styles';
 
 import Colors from "../../../constants/Colors";
@@ -42,47 +43,8 @@ var shadow = {
     }
 }
 
-interface Product {
-    idproduto: number;
-    idgradex: number;
-    idgradey: number;
-    produto: string;
-    cor: string;
-    voltagem: string;
-    codigofabricante: string;
-    iddepartamento: number;
-    departamento: string;
-    idsubdepartamento: string;
-    subdepartamento: string;
-    marca: string;
-    precovenda: string;
-    estoque: string;
-    idpromocao: number;
-    idpromocaoccg: number;
-    promocaoccg: string;
-    promocao: string;
-    datainicial: string;
-    datafinal: string;
-    prazoinicial: number;
-    prazofinal: number;
-    precopartida: string;
-    precoaprazo: string;
-    ordem: number;
-    tipovendapromocao: string;
-    tipoprazopromocao: string;
-    tipo: string;
-    prioridade: number;
-    idpromocaoprodutograde: number;
-    idtipovendapromocao: number;
-    juromes: string;
-    jurosano: string;
-    jurocomposto: string;
-    isdepartamento: number;
-}
-
 export default function Home() {
     const [loading, setLoading] = useState(false)
-    const [filtro, setFiltro] = useState(false)
     const [branch, setBranch] = useState('10002')
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
@@ -179,21 +141,18 @@ export default function Home() {
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
 
-    const Cor = device?.map((item: { cor: any; }) => item.cor)
-    const uniqueCorList = [...new Set(Cor)]
-
-    function encontrarMenorPreco(
+    function HandleLowestPrice(
         jsonData: any,
         tipo: string
     ): any {
         const hoje = new Date()
-        const produtosFiltrados = jsonData.filter((produto: { produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
+        const produtosFiltrados = jsonData.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
             return (
                 produto.cor == color &&
                 produto.produto == product &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
-                new Date(produto.datafinal) >= hoje
+                new Date(produto.datafinal) > hoje
             )
         })
 
@@ -208,15 +167,29 @@ export default function Home() {
                 return parseFloat(a.precoaprazo) - parseFloat(b.precoaprazo)
             })
 
+        console.log(produtosFiltrados[0])
+
         return produtosFiltrados[0]
     }
 
-    function obterProdutoPorMarca(jsonData: any[], marca: string): string[] {
+    function handleProductBrand(jsonData: any[], marca: string): string[] {
         const produtoNomes: string[] = []
 
-        for (const produto of jsonData) {
-            if (produto.marca === marca && !produtoNomes.includes(produto.produto)) {
-                produtoNomes.push(produto.produto);
+        for (const value of jsonData) {
+            if (value.marca === marca && !produtoNomes.includes(value.produto)) {
+                produtoNomes.push(value.produto);
+            }
+        }
+
+        return produtoNomes
+    }
+
+    function handleProductColor(jsonData: any[], produto: string): string[] {
+        const produtoNomes: string[] = []
+
+        for (const value of jsonData) {
+            if (value.produto === produto && !produtoNomes.includes(value.cor)) {
+                produtoNomes.push(value.cor);
             }
         }
 
@@ -285,23 +258,20 @@ export default function Home() {
                                         {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
                                             <>
                                                 <Text>{product} - {color}</Text>
-                                                <IdProduct>{encontrarMenorPreco(device, 'A Vista').idproduto}</IdProduct>
+                                                {HandleLowestPrice(device, 'A Vista') && (
+                                                    <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
+                                                )}
                                             </>
                                         )}
                                         <ContentLocation>
-                                            {/*device.map((item: { cor: string; produto: string; marca: string; tipo: string; }) => {
-                                                if (item.cor == color && item.produto == product && item.marca == brand && item.tipo == 'A Vista') return (
-                                                    console.log(item)
-                                                )
-                                            })*/}
-                                            {encontrarMenorPreco(device, 'A Vista') && (
-                                                <Label key={encontrarMenorPreco(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'A Vista').precovenda)}</Text> (A Vista)</Label>
+                                            {HandleLowestPrice(device, 'A Vista') && (
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'A Vista').precovenda)}</Text> (A Vista)</Label>
                                             )}
-                                            {encontrarMenorPreco(device, 'Cartão') && (
-                                                <Label key={encontrarMenorPreco(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                            {HandleLowestPrice(device, 'Cartão') && (
+                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                             )}
-                                            {encontrarMenorPreco(device, 'Carteira') && (
-                                                <Label key={encontrarMenorPreco(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(encontrarMenorPreco(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {encontrarMenorPreco(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                            {HandleLowestPrice(device, 'Carteira') && (
+                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                             )}
                                         </ContentLocation>
                                     </ContentInfo>
@@ -320,23 +290,16 @@ export default function Home() {
                     <ContentInfo2>
                         <Title>Selecione as opções:</Title>
                         <TextInput
-                            style={filtro ? styles.inputFiltro : styles.input}
+                            style={isLoading == false ? styles.inputFiltro : styles.input}
                             onChangeText={setBranch}
                             value={branch}
                             placeholder="Filial"
                             keyboardType="numeric"
                         />
 
-                        {filtro == true ? (null) : (
-                            <ButtonPicker
-                                onPress={() => setFiltro(true)}
-                                title="Filtrar Filial"
-                                color="#6d057d"
-                                accessibilityLabel="Learn more about this purple button"
-                            />
-                        )}
+                        <Line />
 
-                        {filtro == true && (
+                        {isLoading == false ? (
                             <>
                                 <Picker
                                     style={brand == 'Marca' ? styles.container : styles.containerSelect}
@@ -362,8 +325,8 @@ export default function Home() {
                                     }>
                                     <Picker.Item label="Modelo" value="Modelo" />
 
-                                    {obterProdutoPorMarca(device, brand).map(e => (
-                                        <Picker.Item key={e} label={e} value={e} />
+                                    {handleProductBrand(device, brand).map(item => (
+                                        <Picker.Item key={item} label={item} value={item} />
                                     ))}
                                 </Picker>
 
@@ -374,7 +337,7 @@ export default function Home() {
                                         setColor(itemValue)
                                     }>
                                     <Picker.Item label="Cor" value="Cor" />
-                                    {uniqueCorList.map(item => (
+                                    {handleProductColor(device, product).map(item => (
                                         <Picker.Item key={item} label={item} value={item} />
                                     ))}
                                 </Picker>
@@ -388,6 +351,8 @@ export default function Home() {
                                     />
                                 )}
                             </>
+                        ) : (
+                            <ActivityIndicator style={{ top: 40 }} size={40} color={ColorTheme.Azul} />
                         )}
                     </ContentInfo2>
                 </ImageBackground>
@@ -426,6 +391,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     inputFiltro: {
+        marginBottom: 15,
         color: ColorTheme.Branco3,
         backgroundColor: ColorTheme.Azul,
         padding: 12,

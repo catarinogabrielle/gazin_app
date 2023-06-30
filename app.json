@@ -15,14 +15,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gabrielledcastro.Gazin",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icongazin.png",
         "backgroundColor": "#312783"
       },
-      "package": "com.gabrielledcastro.Gazin"
+      "package": "com.gabrielledcastro.Gazin",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/logogazin.png"

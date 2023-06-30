@@ -72,7 +72,7 @@ color: ${ColorTheme.Branco5};
 font-size: 16px;
 font-weight: 200;
 text-transform: uppercase;
-margin-bottom: 10px;
+margin-top: 2px;
 font-family: Roboto;
 `;
 
@@ -105,4 +105,8 @@ font-family: Roboto;
 
 export const ButtonPicker = styled.Button`
 display: flex;
+`;
+
+export const Line = styled.View`
+border: 0.5px solid #cecece;
 `;
