@@ -84,6 +84,7 @@ export default function Home() {
     }, [])
 
     async function removeItemValue() {
+        setLoading(false)
         try {
             await AsyncStorage.removeItem('@deviceitem')
             setLoading(false)
@@ -211,7 +212,7 @@ export default function Home() {
                             <Logo source={require('../../assets/logogazin.png')} />
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={removeItemValue} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
