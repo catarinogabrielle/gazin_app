@@ -291,20 +291,24 @@ export default function Home() {
             ) : (
                 <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
                     <ContentInfo2>
-                        <Title>Selecione as opções:</Title>
-
                         {filtro == true ? (
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={setBranch}
-                                value={branch}
-                                placeholder="Digite sua filial"
-                                keyboardType="numeric"
-                            />
+                            <>
+                                <Title>Digite sua filial:</Title>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={setBranch}
+                                    value={branch}
+                                    placeholder="Filial"
+                                    keyboardType="numeric"
+                                />
+                            </>
                         ) : (
-                            <Filial>
-                                <TextFilial>{branch}</TextFilial>
-                            </Filial>
+                            <>
+                                <Title>Selecione as opções:</Title>
+                                <Filial>
+                                    <TextFilial>{branch}</TextFilial>
+                                </Filial>
+                            </>
                         )}
 
                         {filtro == true && branch !== '' && (
