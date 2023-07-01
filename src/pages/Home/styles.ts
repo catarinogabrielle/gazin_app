@@ -103,10 +103,22 @@ margin-bottom: 18px;
 font-family: Roboto;
 `;
 
-export const ButtonPicker = styled.Button`
+export const Filial = styled.View`
 display: flex;
+background-color: ${ColorTheme.Azul};
+padding: 16px 12px;
+margin-bottom: 15px;
+`;
+
+export const TextFilial = styled.Text`                                    
+color: ${ColorTheme.Branco3};
+font-size: 16px;
 `;
 
 export const Line = styled.View`
 border: 0.5px solid #cecece;
+`;
+
+export const ButtonPicker = styled.Button`
+display: flex;
 `;

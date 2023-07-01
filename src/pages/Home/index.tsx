@@ -22,8 +22,10 @@ import {
     ContentLocation,
     ContentInfo2,
     Title,
-    ButtonPicker,
+    Filial,
+    TextFilial,
     Line,
+    ButtonPicker,
 } from './styles';
 
 import Colors from "../../../constants/Colors";
@@ -45,7 +47,9 @@ var shadow = {
 
 export default function Home() {
     const [loading, setLoading] = useState(false)
-    const [branch, setBranch] = useState('10002')
+    const [filtro, setFiltro] = useState(true)
+    const [branch, setBranch] = useState('')
+    const [branchFix, setBranchFix] = useState('10002')
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
@@ -124,7 +128,7 @@ export default function Home() {
     const { live } = useLive()
 
     function useDevice() {
-        let address = `/celulares?idfilial=${branch}&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`
+        let address = `/celulares?idfilial=${branch == '' ? branchFix : branch}&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`
 
         const fetcher = async (address: string) => await ApiDevices.get(address).then((res) => res.data)
         const { data, error, isLoading, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
@@ -212,7 +216,7 @@ export default function Home() {
                             <Logo source={require('../../assets/logogazin.png')} />
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
@@ -288,17 +292,35 @@ export default function Home() {
                 <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
                     <ContentInfo2>
                         <Title>Selecione as opções:</Title>
-                        <TextInput
-                            style={isLoading == false ? styles.inputFiltro : styles.input}
-                            onChangeText={setBranch}
-                            value={branch}
-                            placeholder="Filial"
-                            keyboardType="numeric"
-                        />
 
-                        <Line />
+                        {filtro == true ? (
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={setBranch}
+                                value={branch}
+                                placeholder="Digite sua filial"
+                                keyboardType="numeric"
+                            />
+                        ) : (
+                            <Filial>
+                                <TextFilial>{branch}</TextFilial>
+                            </Filial>
+                        )}
 
-                        {isLoading == false ? (
+                        {filtro == true && branch !== '' && (
+                            <ButtonPicker
+                                onPress={() => setFiltro(false)}
+                                title="Filtrar Filial"
+                                color="#6d057d"
+                                accessibilityLabel="Learn more about this purple button"
+                            />
+                        )}
+
+                        {filtro == false && (
+                            <Line />
+                        )}
+
+                        {isLoading == false && filtro == false ? (
                             <>
                                 <Picker
                                     style={brand == 'Marca' ? styles.container : styles.containerSelect}
@@ -351,7 +373,11 @@ export default function Home() {
                                 )}
                             </>
                         ) : (
-                            <ActivityIndicator style={{ top: 40 }} size={40} color={ColorTheme.Azul} />
+                            <>
+                                {(isLoading !== false && filtro !== true) && (
+                                    <ActivityIndicator style={{ top: 40 }} size={40} color={ColorTheme.Azul} />
+                                )}
+                            </>
                         )}
                     </ContentInfo2>
                 </ImageBackground>
