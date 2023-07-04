@@ -3,7 +3,7 @@ import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView }
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useSWR from "swr"
+import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
 
 import {
