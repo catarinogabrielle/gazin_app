@@ -162,8 +162,8 @@ export default function Home() {
         })
 
         if (tipo == 'A Vista') {
-            produtosFiltrados.sort((a: { precovenda: string; }, b: { precovenda: string; }) => {
-                return parseFloat(a.precovenda) - parseFloat(b.precovenda)
+            produtosFiltrados.sort((a: { precopartida: string; }, b: { precopartida: string; }) => {
+                return parseFloat(a.precopartida) - parseFloat(b.precopartida)
             })
         }
 
@@ -268,7 +268,7 @@ export default function Home() {
                                         )}
                                         <ContentLocation>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'A Vista').precovenda)}</Text> (A Vista)</Label>
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                             )}
                                             {HandleLowestPrice(device, 'Cartão') && (
                                                 <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
