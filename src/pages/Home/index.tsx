@@ -232,7 +232,6 @@ export default function Home() {
                                                     height={222}
                                                     videoId={e.video}
                                                     play={true}
-                                                    loopPlaylists
                                                 />
                                             </BoxLive>
                                         ) : (
@@ -246,7 +245,6 @@ export default function Home() {
                                                                 height={222}
                                                                 videoId={items.video}
                                                                 play={true}
-                                                                loopPlaylists
                                                             />
                                                         </BoxLive>
                                                     )
