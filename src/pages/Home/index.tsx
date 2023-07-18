@@ -128,7 +128,7 @@ export default function Home() {
     const { live } = useLive()
 
     function useDevice() {
-        let address = `/celulares?idfilial=${branch == '' ? branchFix : branch}&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9tech`
+        let address = `/celulares?idfilial=${branch == '' ? branchFix : branch}&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech`
 
         const fetcher = async (address: string) => await ApiDevices.get(address).then((res) => res.data)
         const { data, error, isLoading, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
@@ -221,7 +221,8 @@ export default function Home() {
 
                     {isLoading == false ? (
                         <Content>
-                            <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
+                            <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>
+                                {/** 
                                 {live.map((e: { id: any; live: boolean; video: string | undefined; }) => (
                                     <BoxVideo key={e.id}>
                                         {e.live == true ? (
@@ -253,9 +254,10 @@ export default function Home() {
                                         )}
                                     </BoxVideo>
                                 ))}
+                                */}
 
                                 <ScrollView>
-                                    <ContentInfo style={shadow}>
+                                    <ContentInfo>
                                         {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
                                             <>
                                                 <Text>{product} - {color}</Text>
@@ -266,13 +268,13 @@ export default function Home() {
                                         )}
                                         <ContentLocation>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                             )}
                                             {HandleLowestPrice(device, 'Cartão') && (
-                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                             )}
                                             {HandleLowestPrice(device, 'Carteira') && (
-                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                             )}
                                         </ContentLocation>
                                     </ContentInfo>
@@ -287,7 +289,7 @@ export default function Home() {
                     }
                 </>
             ) : (
-                <ImageBackground source={require('../../assets/backgroundGazin.png')} resizeMode="cover" style={{ flex: 1 }}>
+                <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>
                     <ContentInfo2>
                         {filtro == true ? (
                             <>
@@ -392,7 +394,7 @@ const styles = StyleSheet.create({
     container: {
         color: ColorTheme.Cinza,
         marginTop: 15,
-        backgroundColor: ColorTheme.Branco3,
+        backgroundColor: ColorTheme.Branco4, //Branco3
     },
     containerSelect: {
         color: ColorTheme.Branco3,
@@ -403,7 +405,7 @@ const styles = StyleSheet.create({
         color: ColorTheme.Cinza,
         marginTop: 15,
         marginBottom: 15,
-        backgroundColor: ColorTheme.Branco3,
+        backgroundColor: ColorTheme.Branco4, //Branco3
     },
     containerSelect2: {
         color: ColorTheme.Branco3,
@@ -414,7 +416,7 @@ const styles = StyleSheet.create({
     input: {
         color: ColorTheme.Cinza,
         marginBottom: 15,
-        backgroundColor: ColorTheme.Branco3,
+        backgroundColor: ColorTheme.Branco4, //Branco3
         padding: 12,
     },
     inputFiltro: {

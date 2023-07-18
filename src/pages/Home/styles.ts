@@ -54,8 +54,8 @@ align-items: center;
 
 export const ContentInfo = styled.View`
 padding: 35px 25px;
-margin: 20px 16px 20px 16px;
-background: ${ColorTheme.Branco3};
+//margin: 20px 16px 20px 16px;
+//background: ${ColorTheme.Branco3};
 border-radius: 10px;
 `;
 
@@ -80,8 +80,10 @@ export const Label = styled.Text`
 color: ${ColorTheme.Preto};
 font-size: 19px;
 font-weight: 300;
-margin-top: 22px;
+//margin-top: 22px;
 font-family: Roboto;
+
+margin-top: 35px;
 `;
 
 export const ContentLocation = styled.View`
