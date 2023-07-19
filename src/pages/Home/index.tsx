@@ -151,13 +151,15 @@ export default function Home() {
         tipo: string
     ): any {
         const hoje = new Date()
+        var Today = hoje.toLocaleDateString()
         const produtosFiltrados = jsonData.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
+            var finaleDate = new Date(produto.datafinal).toLocaleDateString()
             return (
                 produto.cor == color &&
                 produto.produto == product &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
-                new Date(produto.datafinal) > hoje
+                finaleDate >= Today
             )
         })
 
