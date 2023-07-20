@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView, AppState } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -53,6 +53,7 @@ export default function Home() {
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
+    const [id, setId] = useState('')
 
     const data = {
         branch,
@@ -63,6 +64,27 @@ export default function Home() {
 
     async function diveceItemsInfo() {
         await AsyncStorage.setItem('@deviceitem', JSON.stringify(data))
+    }
+
+    const appState = useRef(AppState.currentState)
+    const [appStateVisible, setAppStateVisible] = useState(appState.current)
+
+    useEffect(() => {
+        AppState.addEventListener("change", _handleAppStateChange)
+        return () => {
+            AppState.removeEventListener("change", _handleAppStateChange)
+        }
+    }, [])
+
+    const _handleAppStateChange = (nextAppState) => {
+        appState.current = nextAppState
+        setAppStateVisible(appState.current)
+
+        if (appState.current === "active") {
+            console.log('ativo')
+        } else {
+            console.log('inativo')
+        }
     }
 
     useEffect(() => {
@@ -142,6 +164,29 @@ export default function Home() {
     }
 
     const { device, isLoading } = useDevice()
+
+    async function handleDevices() {
+        try {
+            await Api.post('/devices', {
+                device: `${product} - ${color}`,
+                price: `${mask(HandleLowestPrice(device, 'A Vista').precopartida)}`,
+                price_card: `${mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}`,
+                price_desk: `${mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}`,
+                branch: branch
+            }).then(response => {
+                setId(response.data.id)
+            })
+
+        } catch (err) {
+            console.log('erro', err)
+        }
+    }
+
+    useEffect(() => {
+        if (brand !== 'Marca' || product !== 'Modelo' || color !== 'Cor') {
+            handleDevices()
+        }
+    }, [device, loading])
 
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
