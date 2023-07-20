@@ -62,8 +62,16 @@ export default function Home() {
         color
     }
 
+    const dataId = {
+        id
+    }
+
     async function diveceItemsInfo() {
         await AsyncStorage.setItem('@deviceitem', JSON.stringify(data))
+    }
+
+    async function diveceItemsId(response) {
+        await AsyncStorage.setItem('@id', JSON.stringify(response.data.id))
     }
 
     const appState = useRef(AppState.currentState)
@@ -84,6 +92,22 @@ export default function Home() {
             console.log('ativo')
         } else {
             console.log('inativo')
+            handleDeleteDevice()
+        }
+    }
+
+    async function handleDeleteDevice() {
+        const storageId = await AsyncStorage.getItem('@id')
+        let hasDeviceId = JSON.parse(storageId || '{}')
+
+        try {
+            await Api.delete('/devices', {
+                params: {
+                    device_id: hasDeviceId
+                }
+            })
+        } catch (err) {
+            console.log('erro', err)
         }
     }
 
@@ -174,6 +198,7 @@ export default function Home() {
                 price_desk: `${mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}`,
                 branch: branch
             }).then(response => {
+                diveceItemsId(response)
                 setId(response.data.id)
             })
 
@@ -186,7 +211,7 @@ export default function Home() {
         if (brand !== 'Marca' || product !== 'Modelo' || color !== 'Cor') {
             handleDevices()
         }
-    }, [device, loading])
+    }, [device, isLoading])
 
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
@@ -263,7 +288,7 @@ export default function Home() {
                             <Logo source={require('../../assets/logogazin.png')} />
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
