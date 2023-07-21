@@ -212,6 +212,8 @@ export default function Home() {
         return 'R$ ' + valor
     }
 
+    console.log(intro)
+
     return (
         <Container>
             {loading ? (
@@ -233,6 +235,7 @@ export default function Home() {
                                 isLooping={true}
                                 isMuted={true}
                                 shouldPlay={true}
+                                useNativeControls
                             />
                             {/** <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>*/}
                             {/** 
