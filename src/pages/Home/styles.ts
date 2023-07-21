@@ -83,7 +83,7 @@ font-weight: 300;
 //margin-top: 22px;
 font-family: Roboto;
 
-margin-top: 35px;
+margin-top: 30px;
 `;
 
 export const ContentLocation = styled.View`

@@ -5,6 +5,9 @@ import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
+import { Video } from 'expo-av'
+
+const intro = require('../../assets/animation.mp4')
 
 import {
     Container,
@@ -215,7 +218,7 @@ export default function Home() {
                 <>
                     <Header>
                         <ContentLogo>
-                            <Logo source={require('../../assets/logogazin.png')} />
+                            {/**<Logo source={require('../../assets/logogazin.png')} />*/}
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
                         <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
@@ -223,8 +226,16 @@ export default function Home() {
 
                     {isLoading == false ? (
                         <Content>
-                            <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>
-                                {/** 
+                            <Video
+                                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                                source={intro}
+                                resizeMode="cover"
+                                isLooping={true}
+                                isMuted={true}
+                                shouldPlay={true}
+                            />
+                            {/** <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>*/}
+                            {/** 
                                 {live.map((e: { id: any; live: boolean; video: string | undefined; }) => (
                                     <BoxVideo key={e.id}>
                                         {e.live == true ? (
@@ -258,30 +269,30 @@ export default function Home() {
                                 ))}
                                 */}
 
-                                <ScrollView>
-                                    <ContentInfo>
-                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
-                                            <>
-                                                <Text>{product} - {color}</Text>
-                                                {HandleLowestPrice(device, 'A Vista') && (
-                                                    <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
-                                                )}
-                                            </>
-                                        )}
-                                        <ContentLocation>
+                            <ScrollView>
+                                <ContentInfo>
+                                    {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
+                                        <>
+                                            <Text>{product} - {color}</Text>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                                <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
                                             )}
-                                            {HandleLowestPrice(device, 'Cartão') && (
-                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
-                                            )}
-                                            {HandleLowestPrice(device, 'Carteira') && (
-                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
-                                            )}
-                                        </ContentLocation>
-                                    </ContentInfo>
-                                </ScrollView>
-                            </ImageBackground>
+                                        </>
+                                    )}
+                                    <ContentLocation>
+                                        {HandleLowestPrice(device, 'A Vista') && (
+                                            <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                        )}
+                                        {HandleLowestPrice(device, 'Cartão') && (
+                                            <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                        )}
+                                        {HandleLowestPrice(device, 'Carteira') && (
+                                            <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                        )}
+                                    </ContentLocation>
+                                </ContentInfo>
+                            </ScrollView>
+                            {/**</ImageBackground>*/}
                         </Content>
                     ) : (
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
