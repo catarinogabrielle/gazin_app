@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView, AppState } from "react-native";
+import React, { useState, useEffect } from "react";
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -53,7 +53,6 @@ export default function Home() {
     const [brand, setBrand] = useState('Marca')
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
-    const [id, setId] = useState('')
 
     const data = {
         branch,
@@ -62,53 +61,8 @@ export default function Home() {
         color
     }
 
-    const dataId = {
-        id
-    }
-
     async function diveceItemsInfo() {
         await AsyncStorage.setItem('@deviceitem', JSON.stringify(data))
-    }
-
-    async function diveceItemsId(response) {
-        await AsyncStorage.setItem('@id', JSON.stringify(response.data.id))
-    }
-
-    const appState = useRef(AppState.currentState)
-    const [appStateVisible, setAppStateVisible] = useState(appState.current)
-
-    useEffect(() => {
-        AppState.addEventListener("change", _handleAppStateChange)
-        return () => {
-            AppState.removeEventListener("change", _handleAppStateChange)
-        }
-    }, [])
-
-    const _handleAppStateChange = (nextAppState) => {
-        appState.current = nextAppState
-        setAppStateVisible(appState.current)
-
-        if (appState.current === "active") {
-            console.log('ativo')
-        } else {
-            console.log('inativo')
-            handleDeleteDevice()
-        }
-    }
-
-    async function handleDeleteDevice() {
-        const storageId = await AsyncStorage.getItem('@id')
-        let hasDeviceId = JSON.parse(storageId || '{}')
-
-        try {
-            await Api.delete('/devices', {
-                params: {
-                    device_id: hasDeviceId
-                }
-            })
-        } catch (err) {
-            console.log('erro', err)
-        }
     }
 
     useEffect(() => {
@@ -189,30 +143,6 @@ export default function Home() {
 
     const { device, isLoading } = useDevice()
 
-    async function handleDevices() {
-        try {
-            await Api.post('/devices', {
-                device: `${product} - ${color}`,
-                price: `${mask(HandleLowestPrice(device, 'A Vista').precopartida)}`,
-                price_card: `${mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}`,
-                price_desk: `${mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}`,
-                branch: branch
-            }).then(response => {
-                diveceItemsId(response)
-                setId(response.data.id)
-            })
-
-        } catch (err) {
-            console.log('erro', err)
-        }
-    }
-
-    useEffect(() => {
-        if (brand !== 'Marca' || product !== 'Modelo' || color !== 'Cor') {
-            handleDevices()
-        }
-    }, [device, isLoading])
-
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
 
@@ -222,7 +152,7 @@ export default function Home() {
     ): any {
         const hoje = new Date()
         var Today = hoje.toLocaleDateString()
-        const produtosFiltrados = jsonData.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
+        const produtosFiltrados = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; datafinal: string | number | Date; }) => {
             var finaleDate = new Date(produto.datafinal).toLocaleDateString()
             return (
                 produto.cor == color &&
@@ -234,13 +164,13 @@ export default function Home() {
         })
 
         if (tipo == 'A Vista') {
-            produtosFiltrados.sort((a: { precopartida: string; }, b: { precopartida: string; }) => {
+            produtosFiltrados?.sort((a: { precopartida: string; }, b: { precopartida: string; }) => {
                 return parseFloat(a.precopartida) - parseFloat(b.precopartida)
             })
         }
 
         if (tipo == 'Cartão' || tipo == 'Carteira')
-            produtosFiltrados.sort((a: { precoaprazo: string; }, b: { precoaprazo: string; }) => {
+            produtosFiltrados?.sort((a: { precoaprazo: string; }, b: { precoaprazo: string; }) => {
                 return parseFloat(a.precoaprazo) - parseFloat(b.precoaprazo)
             })
 
@@ -288,7 +218,7 @@ export default function Home() {
                             <Logo source={require('../../assets/logogazin.png')} />
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
