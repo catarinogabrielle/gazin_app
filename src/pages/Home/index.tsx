@@ -68,6 +68,10 @@ export default function Home() {
         await AsyncStorage.setItem('@deviceitem', JSON.stringify(data))
     }
 
+    async function deviceId(device_id: any) {
+        await AsyncStorage.setItem('@deviceId', JSON.stringify(device_id))
+    }
+
     useEffect(() => {
         setLoading(true)
 
@@ -214,6 +218,39 @@ export default function Home() {
 
     console.log(intro)
 
+    async function handleDeleteDevice() {
+        const storageId = await AsyncStorage.getItem('@deviceId')
+        let hasDeviceId = JSON.parse(storageId || '{}')
+        try {
+            await Api.delete('/devices', {
+                params: {
+                    device_id: hasDeviceId
+                }
+            })
+        } catch (err) {
+            console.log('erro', err)
+        }
+    }
+
+    async function handleAddDevice() {
+        try {
+            await Api.post('/devices', {
+                device: product,
+                color: color,
+                branch: branch,
+            }).then(response => {
+                const device_id = response.data.id
+                deviceId(device_id)
+
+            }).catch((err) => {
+                console.log('erro', err)
+            })
+
+        } catch (err) {
+            console.log('erro', err)
+        }
+    }
+
     return (
         <Container>
             {loading ? (
@@ -223,7 +260,7 @@ export default function Home() {
                             {/**<Logo source={require('../../assets/logogazin.png')} />*/}
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor') }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
@@ -385,7 +422,7 @@ export default function Home() {
 
                                 {brand == 'Marca' || product == 'Modelo' || color == 'Cor' ? (null) : (
                                     <ButtonPicker
-                                        onPress={() => { setLoading(true), diveceItemsInfo() }}
+                                        onPress={() => { setLoading(true), diveceItemsInfo(), handleAddDevice() }}
                                         title="Filtrar"
                                         color="#6d057d"
                                         accessibilityLabel="Learn more about this purple button"
