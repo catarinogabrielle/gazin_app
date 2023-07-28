@@ -37,8 +37,6 @@ const ColorTheme = Colors['Theme'];
 import { ApiDevices } from "../../services/apiDevices"
 import { Api } from "../../services/api"
 
-import Devices from "../../../teste.json"
-
 var shadow = {
     elevation: 3,
     shadowColor: "grey",
@@ -153,7 +151,7 @@ export default function Home() {
 
     const { device, isLoading } = useDevice()
 
-    const Marca = Devices?.map((item: { marca: string; }) => item.marca)
+    const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
 
     function HandleLowestPrice(
@@ -168,6 +166,7 @@ export default function Home() {
 
             return (
                 produto.produto === product &&
+                produto.cor == color &&
                 produto.marca === brand &&
                 produto.tipo === tipo &&
                 produto.voltagem === voltagem &&
@@ -194,7 +193,7 @@ export default function Home() {
         const produtosFiltrados = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datafinal: string | number | Date; }) => {
             var finaleDate = new Date(produto.datafinal).toLocaleDateString()
             return (
-                produto.cor == color &&
+                produto.cor == color && 
                 produto.produto == product &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
@@ -360,20 +359,20 @@ export default function Home() {
                                     {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
                                         <>
                                             <Text>{product} {voltagem} - {color}</Text>
-                                            {HandleLowestPrice(Devices, 'A Vista') && (
-                                                <IdProduct key={HandleLowestPrice(Devices, 'A Vista').idproduto + '4'}>{HandleLowestPrice(Devices, 'A Vista').idproduto}</IdProduct>
+                                            {HandleLowestPrice(device, 'A Vista') && (
+                                                <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
                                             )}
                                         </>
                                     )}
                                     <ContentLocation>
-                                        {HandleLowestPrice(Devices, 'A Vista') && (
-                                            <Label key={HandleLowestPrice(Devices, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(Devices, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                        {HandleLowestPrice(device, 'A Vista') && (
+                                            <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                         )}
-                                        {HandleLowestPrice(Devices, 'Cartão') && (
-                                            <Label key={HandleLowestPrice(Devices, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(Devices, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(Devices, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                        {HandleLowestPrice(device, 'Cartão') && (
+                                            <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                         )}
-                                        {HandleLowestPrice(Devices, 'Carteira') && (
-                                            <Label key={HandleLowestPrice(Devices, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(Devices, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(Devices, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                        {HandleLowestPrice(device, 'Carteira') && (
+                                            <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                         )}
                                     </ContentLocation>
                                 </ContentInfo>
@@ -449,7 +448,7 @@ export default function Home() {
                                     }>
                                     <Picker.Item label="Modelo" value="Modelo" />
 
-                                    {handleProductBrand(Devices, brand).map(item => (
+                                    {handleProductBrand(device, brand).map(item => (
                                         <Picker.Item key={item} label={item} value={item} />
                                     ))}
                                 </Picker>
@@ -461,7 +460,7 @@ export default function Home() {
                                         setColor(itemValue)
                                     }>
                                     <Picker.Item label="Cor" value="Cor" />
-                                    {handleProductColor(Devices, product).map(item => (
+                                    {handleProductColor(device, product).map(item => (
                                         <Picker.Item key={item} label={item} value={item} />
                                     ))}
                                 </Picker>
@@ -473,7 +472,7 @@ export default function Home() {
                                         setVoltagem(itemValue)
                                     }>
                                     <Picker.Item label="Voltagem" value="Voltagem" />
-                                    {handleProductVolt(Devices, product).map(item => (
+                                    {handleProductVolt(device, product).map(item => (
                                         <Picker.Item key={item} label={item} value={item} />
                                     ))}
                                 </Picker>
