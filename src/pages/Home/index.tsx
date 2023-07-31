@@ -166,7 +166,7 @@ export default function Home() {
 
             return (
                 produto.produto === product &&
-                produto.cor == color &&
+                //produto.cor == color &&
                 produto.marca === brand &&
                 produto.tipo === tipo &&
                 produto.voltagem === voltagem &&
