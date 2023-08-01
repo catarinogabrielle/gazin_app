@@ -62,7 +62,8 @@ export default function Home() {
         branch,
         brand,
         product,
-        color
+        color,
+        voltagem,
     }
 
     async function diveceItemsInfo() {
@@ -87,7 +88,7 @@ export default function Home() {
                 setBrand(hasDevice.brand)
                 setProduct(hasDevice.product)
                 setColor(hasDevice.color)
-
+                setVoltagem(hasDevice.voltagem)
                 setLoading(true)
             }
         }
@@ -163,10 +164,8 @@ export default function Home() {
         const produtosFiltradosDataIgualHoje = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datainicial: string | number | Date; datafinal: string | number | Date; }) => {
             const initialDate = new Date(produto.datainicial).toLocaleDateString()
             const finaleDate = new Date(produto.datafinal).toLocaleDateString()
-
             return (
                 produto.produto === product &&
-                produto.cor == color &&
                 produto.marca === brand &&
                 produto.tipo === tipo &&
                 produto.voltagem === voltagem &&
@@ -192,8 +191,9 @@ export default function Home() {
 
         const produtosFiltrados = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datafinal: string | number | Date; }) => {
             var finaleDate = new Date(produto.datafinal).toLocaleDateString()
+           
             return (
-                produto.cor == color && 
+                produto.cor == color &&
                 produto.produto == product &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
@@ -305,7 +305,7 @@ export default function Home() {
                             {/**<Logo source={require('../../assets/logogazin.png')} />*/}
                             <TextLogo>Seja Bem Vindo (a)</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), setVoltagem('Voltagem'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
@@ -358,7 +358,7 @@ export default function Home() {
                                 <ContentInfo>
                                     {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
                                         <>
-                                            <Text>{product} {voltagem} - {color}</Text>
+                                            <Text>{product} - {color}</Text>
                                             {HandleLowestPrice(device, 'A Vista') && (
                                                 <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
                                             )}
