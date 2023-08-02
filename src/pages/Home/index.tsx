@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView } from "react-native";
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView, Modal, View, Pressable, TouchableOpacity } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -300,6 +300,44 @@ export default function Home() {
         }
     }
 
+    const [modalVisible, setModalVisible] = useState(false)
+
+    const ModalContainer = () => {
+        return (
+            <View style={styles.centeredView}>
+                <Modal
+                    animationType="none"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(true)}>
+
+                    <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
+                            <Text style={styles.modalTextVer}>Versão - 1.0.1</Text>
+                            <Pressable
+                                style={styles.buttonClose}
+                                onPress={() => {
+                                    setModalVisible(false),
+                                        removeItemValue(),
+                                        setFiltro(true),
+                                        setBranch(''),
+                                        setBrand('Marca'),
+                                        setProduct('Modelo'),
+                                        setColor('Cor'),
+                                        setVoltagem('Voltagem'),
+                                        handleDeleteDevice()
+                                }}>
+                                <Text style={styles.textStyle}>Sair</Text>
+                            </Pressable>
+                        </View>
+                    </TouchableOpacity>
+
+                </Modal>
+            </View>
+        )
+    }
+
     return (
         <Container>
             {loading ? (
@@ -307,15 +345,15 @@ export default function Home() {
                     <Header>
                         <ContentLogo>
                             {/**<Logo source={require('../../assets/logogazin.png')} />*/}
-                            <TextLogo>Seja Bem Vindo (a)</TextLogo>
+                            <TextLogo>Seja Bem Vindo a Gazin</TextLogo>
                         </ContentLogo>
-                        <Ionicons onPress={() => { removeItemValue(), setFiltro(true), setBranch(''), setBrand('Marca'), setProduct('Modelo'), setColor('Cor'), setVoltagem('Voltagem'), handleDeleteDevice() }} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
                     {isLoading == false ? (
                         <Content>
                             <Video
-                                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                                style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
                                 source={intro}
                                 resizeMode="cover"
                                 isLooping={true}
@@ -382,6 +420,7 @@ export default function Home() {
                                 </ContentInfo>
                             </ScrollView>
                             {/**</ImageBackground>*/}
+                            {ModalContainer()}
                         </Content>
                     ) : (
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -538,5 +577,45 @@ const styles = StyleSheet.create({
         color: ColorTheme.Branco3,
         backgroundColor: ColorTheme.Azul,
         padding: 12,
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    centeredView2: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.377)',
+    },
+    modalView: {
+        backgroundColor: ColorTheme.Branco3,
+        borderRadius: 8,
+        padding: 35,
+        alignItems: 'center',
+        width: '80%',
+    },
+    buttonClose: {
+        borderRadius: 8,
+        padding: 10,
+        backgroundColor: ColorTheme.Laranja,
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 19,
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 19,
+    },
+    modalTextVer: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 15,
+        color: ColorTheme.Branco5
+    },
 });
