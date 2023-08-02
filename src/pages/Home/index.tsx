@@ -5,7 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
-import { Video } from 'expo-av'
+import { Video } from 'expo-av';
 
 const intro = require('../../assets/animation.mp4')
 
@@ -159,17 +159,22 @@ export default function Home() {
         jsonData: any,
         tipo: string
     ): any {
-        const hoje = new Date()
-        var Today = hoje.toLocaleDateString()
+        const val = new Date()
+        var today = val.toLocaleDateString()
+        var dia = today.split("/")[0]
+        var mes = today.split("/")[1]
+        var ano = today.split("/")[2]
+        var hoje = ano + '-' + ("0" + mes).slice(-2) + '-' + ("0" + dia).slice(-2)
+
         const produtosFiltradosDataIgualHoje = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datainicial: string | number | Date; datafinal: string | number | Date; }) => {
-            const initialDate = new Date(produto.datainicial).toLocaleDateString()
-            const finaleDate = new Date(produto.datafinal).toLocaleDateString()
+
             return (
-                produto.produto === product &&
-                produto.marca === brand &&
-                produto.tipo === tipo &&
-                produto.voltagem === voltagem &&
-                initialDate === Today && finaleDate === Today
+                produto.produto == product &&
+                produto.cor == color &&
+                produto.marca == brand &&
+                produto.tipo == tipo &&
+                produto.voltagem == voltagem &&
+                produto.datainicial == hoje && produto.datafinal == hoje
             )
         })
 
@@ -190,15 +195,14 @@ export default function Home() {
         }
 
         const produtosFiltrados = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datafinal: string | number | Date; }) => {
-            var finaleDate = new Date(produto.datafinal).toLocaleDateString()
-           
+
             return (
-                produto.cor == color &&
                 produto.produto == product &&
+                produto.cor == color &&
                 produto.marca == brand &&
                 produto.tipo == tipo &&
                 produto.voltagem == voltagem &&
-                finaleDate >= Today
+                produto.datafinal >= hoje
             )
         })
 
@@ -454,7 +458,7 @@ export default function Home() {
                                 </Picker>
 
                                 <Picker
-                                    style={color == 'Cor' ? styles.container2 : styles.containerSelect2}
+                                    style={color == 'Cor' ? styles.container : styles.containerSelect}
                                     selectedValue={color}
                                     onValueChange={(itemValue, itemIndex) =>
                                         setColor(itemValue)
