@@ -345,7 +345,7 @@ export default function Home() {
                     <Header>
                         <ContentLogo>
                             {/**<Logo source={require('../../assets/logogazin.png')} />*/}
-                            <TextLogo>Seja Bem Vindo a Gazin</TextLogo>
+                            <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
                         </ContentLogo>
                         <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
