@@ -287,6 +287,9 @@ export default function Home() {
                 color: color,
                 voltagem: voltagem,
                 branch: branch,
+                cash: mask(HandleLowestPrice(device, 'A Vista').precopartida),
+                card: mask(HandleLowestPrice(device, 'Cartão').precoaprazo),
+                wallet: mask(HandleLowestPrice(device, 'Carteira').precoaprazo),
             }).then(response => {
                 const device_id = response.data.id
                 deviceId(device_id)
@@ -299,6 +302,30 @@ export default function Home() {
             console.log('erro', err)
         }
     }
+
+    async function handleDeviceUpdate() {
+        const storageId = await AsyncStorage.getItem('@deviceId')
+        let hasDeviceId = JSON.parse(storageId || '{}')
+
+        try {
+            await Api.put('/devices', {
+                device_id: hasDeviceId,
+                cash: mask(HandleLowestPrice(device, 'A Vista').precopartida),
+                card: mask(HandleLowestPrice(device, 'Cartão').precoaprazo),
+                wallet: mask(HandleLowestPrice(device, 'Carteira').precoaprazo),
+            })
+        } catch (err) {
+            console.log('erro', err)
+        }
+    }
+
+    useEffect(() => {
+        if (loading == true) {
+            setTimeout(() => {
+                handleDeviceUpdate()
+            }, 5000)
+        }
+    }, [isLoading, device, loading])
 
     const [modalVisible, setModalVisible] = useState(false)
 
@@ -314,7 +341,7 @@ export default function Home() {
                     <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
-                            <Text style={styles.modalTextVer}>Versão - 1.0.1</Text>
+                            <Text style={styles.modalTextVer}>Versão - 2.0.1</Text>
                             <Pressable
                                 style={styles.buttonClose}
                                 onPress={() => {
