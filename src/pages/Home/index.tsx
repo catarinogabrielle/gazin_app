@@ -159,7 +159,7 @@ export default function Home() {
         setInterval(function () {
             setReloading(!reloading)
         }, 600000)
-    }, [device, reloading])
+    }, [reloading])
 
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
