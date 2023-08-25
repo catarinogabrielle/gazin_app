@@ -108,49 +108,58 @@ export default function Home() {
         }
     }
 
-    function useVideo() {
-        let address = `video`
+    /* 
+     function useVideo() {
+           let address = `video`
+   
+           const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
+           const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+   
+           return {
+               video: data,
+               mutate
+           }
+       }
+   
+       const { video } = useVideo()
+   
+       function useLive() {
+           let address = `live`
+   
+           const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
+           const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+   
+           return {
+               live: data,
+               mutate
+           }
+       }
+   
+       const { live } = useLive()
+   */
 
-        const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
-        const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
+    const [device, setDevice] = useState([])
 
-        return {
-            video: data,
-            mutate
-        }
+    async function loadData() {
+        await ApiDevices.get(`/celulares?idfilial=${branch == '' ? branchFix : branch}&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech`).then(response => {
+            setDevice(response.data)
+
+        }).catch((err) => {
+            console.log('erro', err)
+
+        })
+        return true
     }
 
-    const { video } = useVideo()
+    const [reloading, setReloading] = useState(false)
 
-    function useLive() {
-        let address = `live`
+    useEffect(() => {
+        loadData()
 
-        const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
-        const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
-
-        return {
-            live: data,
-            mutate
-        }
-    }
-
-    const { live } = useLive()
-
-    function useDevice() {
-        let address = `/celulares?idfilial=${branch == '' ? branchFix : branch}&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech`
-
-        const fetcher = async (address: string) => await ApiDevices.get(address).then((res) => res.data)
-        const { data, error, isLoading, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
-
-        return {
-            device: data,
-            isLoading,
-            isError: error,
-            mutate
-        }
-    }
-
-    const { device, isLoading } = useDevice()
+        setInterval(function () {
+            setReloading(!reloading)
+        }, 600000)
+    }, [device, reloading])
 
     const Marca = device?.map((item: { marca: string; }) => item.marca)
     const uniqueMarcaList = [...new Set(Marca)]
@@ -325,7 +334,7 @@ export default function Home() {
                 handleDeviceUpdate()
             }, 5000)
         }
-    }, [isLoading, device, loading])
+    }, [device, loading])
 
     const [modalVisible, setModalVisible] = useState(false)
 
@@ -341,7 +350,7 @@ export default function Home() {
                     <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
-                            <Text style={styles.modalTextVer}>Versão - 2.0.1</Text>
+                            <Text style={styles.modalTextVer}>Versão - 2.2.1</Text>
                             <Pressable
                                 style={styles.buttonClose}
                                 onPress={() => {
@@ -377,7 +386,7 @@ export default function Home() {
                         <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
                     </Header>
 
-                    {isLoading == false ? (
+                    {device.length > 0 ? (
                         <Content>
                             <Video
                                 style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
@@ -492,7 +501,7 @@ export default function Home() {
                             <Line />
                         )}
 
-                        {isLoading == false && filtro == false ? (
+                        {device.length > 0 && filtro == false ? (
                             <>
                                 <Picker
                                     style={brand == 'Marca' ? styles.container : styles.containerSelect}
@@ -558,7 +567,7 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                {(isLoading !== false && filtro !== true) && (
+                                {(device.length < 0 && filtro !== true) && (
                                     <ActivityIndicator style={{ top: 40 }} size={40} color={ColorTheme.Azul} />
                                 )}
                             </>
