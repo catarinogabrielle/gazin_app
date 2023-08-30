@@ -23,11 +23,6 @@ flex-direction: row;
 align-items: center;
 `;
 
-export const Logo = styled.Image`
-width: 92px;
-height: 26px;
-`;
-
 export const TextLogo = styled.Text`                                    
 color: ${ColorTheme.Branco3};
 font-size: 13px;
@@ -43,18 +38,8 @@ width: 100%;
 display: flex;
 `;
 
-export const BoxVideo = styled.View`
-display: flex;
-`;
-
-export const BoxLive = styled.View`
-display: flex;
-align-items: center;
-`;
-
 export const ContentInfo = styled.View`
 padding: 35px 25px;
-//margin: 20px 16px 20px 16px;
 //background: ${ColorTheme.Branco3};
 border-radius: 10px;
 `;
@@ -80,7 +65,6 @@ export const Label = styled.Text`
 color: ${ColorTheme.Preto};
 font-size: 19px;
 font-weight: 300;
-//margin-top: 22px;
 font-family: Roboto;
 
 margin-top: 32px;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView, Modal, View, Pressable, TouchableOpacity } from "react-native";
-import YoutubePlayer from "react-native-youtube-iframe";
+import { ActivityIndicator, ImageBackground, StyleSheet, TextInput, ScrollView, Modal, View, Pressable, TouchableOpacity } from "react-native";;
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSWR from "swr";
@@ -13,11 +12,8 @@ import {
     Container,
     Header,
     ContentLogo,
-    Logo,
     TextLogo,
     Content,
-    BoxVideo,
-    BoxLive,
     ContentInfo,
     Text,
     IdProduct,
@@ -37,17 +33,6 @@ const ColorTheme = Colors['Theme'];
 import { ApiDevices } from "../../services/apiDevices"
 import { Api } from "../../services/api"
 
-var shadow = {
-    elevation: 3,
-    shadowColor: "grey",
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    shadowOffset: {
-        width: 0,
-        height: 2
-    }
-}
-
 export default function Home() {
     const [loading, setLoading] = useState(false)
     const [filtro, setFiltro] = useState(true)
@@ -57,6 +42,33 @@ export default function Home() {
     const [product, setProduct] = useState('Modelo')
     const [color, setColor] = useState('Cor')
     const [voltagem, setVoltagem] = useState('Voltagem')
+    const [device, setDevice] = useState([])
+    const [modalVisible, setModalVisible] = useState(false)
+
+    async function loadData() {
+        const storageInfo = await AsyncStorage.getItem('@deviceitem')
+        let hasDevice = JSON.parse(storageInfo || '{}')
+
+        await ApiDevices.get(`/celulares?idfilial=${Object.keys(hasDevice).length > 0 ? hasDevice.branch : branch}&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech`).then(response => {
+            setDevice(response.data)
+
+        }).catch((err) => {
+            console.log('erro', err)
+        })
+        return true
+    }
+
+    const [time, setTime] = useState(true)
+
+    useEffect(() => {
+        setTimeout(() => {
+            loadData()
+            setTime(!time)
+        }, 600000)
+    }, [time])
+
+    const Marca = device?.map((item: { marca: string; }) => item.marca)
+    const uniqueMarcaList = [...new Set(Marca)]
 
     const data = {
         branch,
@@ -74,6 +86,8 @@ export default function Home() {
         await AsyncStorage.setItem('@deviceId', JSON.stringify(device_id))
     }
 
+    const [loadingStorage, setLoadingStorage] = useState(true)
+
     useEffect(() => {
         setLoading(true)
 
@@ -90,11 +104,17 @@ export default function Home() {
                 setColor(hasDevice.color)
                 setVoltagem(hasDevice.voltagem)
                 setLoading(true)
+
+                if (branch == '') {
+                    setLoadingStorage(!loadingStorage)
+                } else {
+                    loadData()
+                }
             }
         }
 
         getDeviceStorage()
-    }, [])
+    }, [loadingStorage])
 
     async function removeItemValue() {
         setLoading(false)
@@ -107,62 +127,6 @@ export default function Home() {
             return false;
         }
     }
-
-    /* 
-     function useVideo() {
-           let address = `video`
-   
-           const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
-           const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
-   
-           return {
-               video: data,
-               mutate
-           }
-       }
-   
-       const { video } = useVideo()
-   
-       function useLive() {
-           let address = `live`
-   
-           const fetcher = async (address: string) => await Api.get(address).then((res) => res.data)
-           const { data, mutate } = useSWR(address, fetcher, { refreshInterval: 5000 })
-   
-           return {
-               live: data,
-               mutate
-           }
-       }
-   
-       const { live } = useLive()
-   */
-
-    const [device, setDevice] = useState([])
-
-    async function loadData() {
-        await ApiDevices.get(`/celulares?idfilial=${branch == '' ? branchFix : branch}&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech`).then(response => {
-            setDevice(response.data)
-
-        }).catch((err) => {
-            console.log('erro', err)
-
-        })
-        return true
-    }
-
-    const [reloading, setReloading] = useState(false)
-
-    useEffect(() => {
-        loadData()
-
-        setInterval(function () {
-            setReloading(!reloading)
-        }, 600000)
-    }, [reloading])
-
-    const Marca = device?.map((item: { marca: string; }) => item.marca)
-    const uniqueMarcaList = [...new Set(Marca)]
 
     function HandleLowestPrice(
         jsonData: any,
@@ -229,6 +193,14 @@ export default function Home() {
         return produtosFiltrados[0]
     }
 
+    function mask(input: string): string {
+        input = parseFloat(input).toFixed(2)
+        input = input.toString().replace('.', ',')
+        const valor = input.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+
+        return 'R$ ' + valor
+    }
+
     function handleProductBrand(jsonData: any[], marca: string): string[] {
         const produtoNomes: string[] = []
 
@@ -265,18 +237,8 @@ export default function Home() {
         return voltagemDevice
     }
 
-    function mask(input: string): string {
-        input = parseFloat(input).toFixed(2)
-        input = input.toString().replace('.', ',')
-        const valor = input.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-
-        return 'R$ ' + valor
-    }
-
-    console.log(intro)
-
     async function handleDeleteDevice() {
-        const storageId = await AsyncStorage.getItem('@deviceId')
+        /*const storageId = await AsyncStorage.getItem('@deviceId')
         let hasDeviceId = JSON.parse(storageId || '{}')
         try {
             await Api.delete('/devices', {
@@ -287,9 +249,11 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
+        */
     }
 
     async function handleAddDevice() {
+        /*
         try {
             await Api.post('/devices', {
                 device: product,
@@ -310,9 +274,11 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
+        */
     }
 
     async function handleDeviceUpdate() {
+        /*
         const storageId = await AsyncStorage.getItem('@deviceId')
         let hasDeviceId = JSON.parse(storageId || '{}')
 
@@ -326,17 +292,17 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
+        */
     }
-
-    useEffect(() => {
-        if (loading == true) {
-            setTimeout(() => {
-                handleDeviceUpdate()
-            }, 5000)
-        }
-    }, [device, loading])
-
-    const [modalVisible, setModalVisible] = useState(false)
+    /*
+        useEffect(() => {
+            if (loading == true) {
+                setTimeout(() => {
+                    handleDeviceUpdate()
+                }, 5000)
+            }
+        }, [device, loading])
+        */
 
     const ModalContainer = () => {
         return (
@@ -350,7 +316,7 @@ export default function Home() {
                     <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
-                            <Text style={styles.modalTextVer}>Versão - 2.2.1</Text>
+                            <Text style={styles.modalTextVer}>Versão - 2.0.0 (teste)</Text>
                             <Pressable
                                 style={styles.buttonClose}
                                 onPress={() => {
@@ -380,7 +346,6 @@ export default function Home() {
                 <>
                     <Header>
                         <ContentLogo>
-                            {/**<Logo source={require('../../assets/logogazin.png')} />*/}
                             <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
                         </ContentLogo>
                         <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
@@ -397,40 +362,6 @@ export default function Home() {
                                 shouldPlay={true}
                                 useNativeControls
                             />
-                            {/** <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>*/}
-                            {/** 
-                                {live.map((e: { id: any; live: boolean; video: string | undefined; }) => (
-                                    <BoxVideo key={e.id}>
-                                        {e.live == true ? (
-                                            <BoxLive>
-                                                <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                                                <YoutubePlayer
-                                                    width="100%"
-                                                    height={222}
-                                                    videoId={e.video}
-                                                    play={true}
-                                                />
-                                            </BoxLive>
-                                        ) : (
-                                            <>
-                                                {video.map((items: { brand: string; id: any; video: string | undefined; }) => {
-                                                    if (brand == items.brand) return (
-                                                        <BoxLive key={items.id}>
-                                                            <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
-                                                            <YoutubePlayer
-                                                                width="100%"
-                                                                height={222}
-                                                                videoId={items.video}
-                                                                play={true}
-                                                            />
-                                                        </BoxLive>
-                                                    )
-                                                })}
-                                            </>
-                                        )}
-                                    </BoxVideo>
-                                ))}
-                                */}
 
                             <ScrollView>
                                 <ContentInfo>
@@ -455,7 +386,6 @@ export default function Home() {
                                     </ContentLocation>
                                 </ContentInfo>
                             </ScrollView>
-                            {/**</ImageBackground>*/}
                             {ModalContainer()}
                         </Content>
                     ) : (
@@ -490,7 +420,7 @@ export default function Home() {
 
                         {filtro == true && branch !== '' && (
                             <ButtonPicker
-                                onPress={() => setFiltro(false)}
+                                onPress={() => { loadData(), setFiltro(false) }}
                                 title="Filtrar Filial"
                                 color="#6d057d"
                                 accessibilityLabel="Learn more about this purple button"
@@ -567,7 +497,7 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                {(device.length < 0 && filtro !== true) && (
+                                {(filtro !== true && device.length == 0) && (
                                     <ActivityIndicator style={{ top: 40 }} size={40} color={ColorTheme.Azul} />
                                 )}
                             </>
@@ -583,7 +513,7 @@ const styles = StyleSheet.create({
     container: {
         color: ColorTheme.Cinza,
         marginTop: 15,
-        backgroundColor: ColorTheme.Branco4, //Branco3
+        backgroundColor: ColorTheme.Branco4,
     },
     containerSelect: {
         color: ColorTheme.Branco3,
@@ -594,7 +524,7 @@ const styles = StyleSheet.create({
         color: ColorTheme.Cinza,
         marginTop: 15,
         marginBottom: 15,
-        backgroundColor: ColorTheme.Branco4, //Branco3
+        backgroundColor: ColorTheme.Branco4,
     },
     containerSelect2: {
         color: ColorTheme.Branco3,
@@ -605,7 +535,7 @@ const styles = StyleSheet.create({
     input: {
         color: ColorTheme.Cinza,
         marginBottom: 15,
-        backgroundColor: ColorTheme.Branco4, //Branco3
+        backgroundColor: ColorTheme.Branco4,
         padding: 12,
     },
     inputFiltro: {
