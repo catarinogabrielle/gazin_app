@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Colors from '../../../constants/Colors';
 const ColorTheme = Colors['Theme'];
 
@@ -10,7 +10,6 @@ display: flex;
 export const Header = styled.View`     
 width: 100%;
 padding: 16px 13px 13px 10px;
-background-color:${ColorTheme.Azul};
 flex-direction: row;
 height: 60px;
 align-items: center;
@@ -42,6 +41,8 @@ export const ContentInfo = styled.View`
 padding: 35px 25px;
 //background: ${ColorTheme.Branco3};
 border-radius: 10px;
+display: flex;
+flex-direction: column;
 `;
 
 export const Text = styled.Text`                                    
@@ -107,4 +108,11 @@ border: 0.5px solid #cecece;
 
 export const ButtonPicker = styled.Button`
 display: flex;
+height: 30px;
+`;
+
+export const ImageLogo = styled.Image`
+width: 100%;
+height: 100px;
+margin-top: 110px;
 `;

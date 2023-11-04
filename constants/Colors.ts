@@ -11,5 +11,6 @@ export default {
 		Azul: '#312783',
 		Cinza: '#3d424a',
 		Laranja: '#ff9d2e',
+		Roxo: '#6d057d',
 	},
 };

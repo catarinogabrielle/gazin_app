@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
 import { Video } from 'expo-av';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const intro = require('../../assets/animation.mp4')
 
@@ -25,6 +26,7 @@ import {
     TextFilial,
     Line,
     ButtonPicker,
+    ImageLogo,
 } from './styles';
 
 import Colors from "../../../constants/Colors";
@@ -316,7 +318,7 @@ export default function Home() {
                     <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
-                            <Text style={styles.modalTextVer}>Versão - 2.0.0 (teste)</Text>
+                            <Text style={styles.modalTextVer}>Versão - 2.0.0</Text>
                             <Pressable
                                 style={styles.buttonClose}
                                 onPress={() => {
@@ -344,7 +346,12 @@ export default function Home() {
         <Container>
             {loading ? (
                 <>
-                    <Header>
+                    <Header style={brand == 'MOTOROLA CELULAR' ? { backgroundColor: '#e21717' }
+                        : brand == 'SAMSUNG CELULAR' ? { backgroundColor: '#712783' }
+                            : brand == 'XIAOMI' ? { backgroundColor: '#278333' }
+                                : brand == 'APPLE ' ? { backgroundColor: '#0f7892' }
+                                    : { backgroundColor: '#312783' }
+                    }>
                         <ContentLogo>
                             <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
                         </ContentLogo>
@@ -353,40 +360,56 @@ export default function Home() {
 
                     {device.length > 0 ? (
                         <Content>
-                            <Video
-                                style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
-                                source={intro}
-                                resizeMode="cover"
-                                isLooping={true}
-                                isMuted={true}
-                                shouldPlay={true}
-                                useNativeControls
-                            />
-
-                            <ScrollView>
-                                <ContentInfo>
-                                    {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
-                                        <>
-                                            <Text>{product} - {color}</Text>
+                            <LinearGradient
+                                colors={brand == 'MOTOROLA CELULAR'
+                                    ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(226, 23, 23, 0.1)', 'rgba(226, 23, 23, 0.4)', 'rgba(226, 23, 23, 0.8)', '#e21717']
+                                    : brand == 'SAMSUNG CELULAR'
+                                        ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(113, 39, 131, 0.1)', 'rgba(113, 39, 131, 0.4)', 'rgba(113, 39, 131, 0.8)', '#712783']
+                                        : brand == 'XIAOMI'
+                                            ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(39, 131, 51, 0.1)', 'rgba(39, 131, 51, 0.4)', 'rgba(39, 131, 51, 0.8)', '#278333']
+                                            : brand == 'APPLE '
+                                                ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(15, 120, 146, 0.1)', 'rgba(15, 120, 146, 0.4)', 'rgba(15, 120, 146, 0.8)', '#0f7892']
+                                                : ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(49, 39, 131, 0.1)', 'rgba(49, 39, 131, 0.4)', 'rgba(49, 39, 131, 0.8)', '#312783']
+                                }
+                                style={{ height: '100%' }}>
+                                <ScrollView>
+                                    <ContentInfo>
+                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
+                                            <View>
+                                                <Text>{product} - {color}</Text>
+                                                {HandleLowestPrice(device, 'A Vista') && (
+                                                    <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
+                                                )}
+                                            </View>
+                                        )}
+                                        <ContentLocation>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                             )}
-                                        </>
-                                    )}
-                                    <ContentLocation>
-                                        {HandleLowestPrice(device, 'A Vista') && (
-                                            <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
-                                        )}
-                                        {HandleLowestPrice(device, 'Cartão') && (
-                                            <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
-                                        )}
-                                        {HandleLowestPrice(device, 'Carteira') && (
-                                            <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
-                                        )}
-                                    </ContentLocation>
-                                </ContentInfo>
-                            </ScrollView>
-                            {ModalContainer()}
+                                            {HandleLowestPrice(device, 'Cartão') && (
+                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                            )}
+                                            {HandleLowestPrice(device, 'Carteira') && (
+                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                            )}
+                                        </ContentLocation>
+
+                                        <ImageLogo
+                                            source={require('../../assets/logogazin.png')}
+                                        />
+                                        {/*<Video
+                                            style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
+                                            source={intro}
+                                            resizeMode="cover"
+                                            isLooping={true}
+                                            isMuted={true}
+                                            shouldPlay={true}
+                                            useNativeControls
+                                            />*/}
+                                    </ContentInfo>
+                                </ScrollView>
+                                {ModalContainer()}
+                            </LinearGradient>
                         </Content>
                     ) : (
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -396,7 +419,7 @@ export default function Home() {
                     }
                 </>
             ) : (
-                <ImageBackground source={require('../../assets/backgroundGazin2.png')} resizeMode="cover" style={{ flex: 1 }}>
+                <ImageBackground source={require('../../assets/background.png')} resizeMode="cover" style={{ flex: 1 }}>
                     <ContentInfo2>
                         {filtro == true ? (
                             <>
@@ -422,7 +445,7 @@ export default function Home() {
                             <ButtonPicker
                                 onPress={() => { loadData(), setFiltro(false) }}
                                 title="Filtrar Filial"
-                                color="#6d057d"
+                                color={ColorTheme.Roxo}
                                 accessibilityLabel="Learn more about this purple button"
                             />
                         )}
@@ -490,7 +513,7 @@ export default function Home() {
                                     <ButtonPicker
                                         onPress={() => { setLoading(true), diveceItemsInfo(), handleAddDevice() }}
                                         title="Filtrar"
-                                        color="#6d057d"
+                                        color={ColorTheme.Roxo}
                                         accessibilityLabel="Learn more about this purple button"
                                     />
                                 )}
@@ -505,7 +528,7 @@ export default function Home() {
                     </ContentInfo2>
                 </ImageBackground>
             )}
-        </Container >
+        </Container>
     )
 }
 
@@ -514,6 +537,8 @@ const styles = StyleSheet.create({
         color: ColorTheme.Cinza,
         marginTop: 15,
         backgroundColor: ColorTheme.Branco4,
+        borderWidth: 1,
+        borderColor: ColorTheme.Branco2,
     },
     containerSelect: {
         color: ColorTheme.Branco3,
@@ -525,6 +550,8 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15,
         backgroundColor: ColorTheme.Branco4,
+        borderWidth: 1,
+        borderColor: ColorTheme.Branco2,
     },
     containerSelect2: {
         color: ColorTheme.Branco3,
@@ -537,6 +564,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         backgroundColor: ColorTheme.Branco4,
         padding: 12,
+        borderWidth: 1,
+        borderColor: ColorTheme.Branco2,
     },
     inputFiltro: {
         marginBottom: 15,
@@ -565,7 +594,7 @@ const styles = StyleSheet.create({
     buttonClose: {
         borderRadius: 8,
         padding: 10,
-        backgroundColor: ColorTheme.Laranja,
+        backgroundColor: ColorTheme.Roxo,
     },
     textStyle: {
         color: 'white',
@@ -582,6 +611,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
         fontSize: 15,
-        color: ColorTheme.Branco5
-    },
+        color: ColorTheme.Branco5,
+    }
 });
