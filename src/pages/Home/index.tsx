@@ -5,7 +5,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
 import { Video } from 'expo-av';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const intro = require('../../assets/animation.mp4')
 
