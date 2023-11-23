@@ -346,12 +346,7 @@ export default function Home() {
         <Container>
             {loading ? (
                 <>
-                    <Header style={brand == 'MOTOROLA CELULAR' ? { backgroundColor: '#0f7892' }
-                        : brand == 'SAMSUNG CELULAR' ? { backgroundColor: '#712783' }
-                            : brand == 'XIAOMI' ? { backgroundColor: '#278333' }
-                                : brand == 'APPLE ' ? { backgroundColor: '#e21717' }
-                                    : { backgroundColor: '#312783' }
-                    }>
+                    <Header>
                         <ContentLogo>
                             <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
                         </ContentLogo>
@@ -360,44 +355,37 @@ export default function Home() {
 
                     {device.length > 0 ? (
                         <Content>
-                            <LinearGradient
-                                colors={brand == 'MOTOROLA CELULAR'
-                                    ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(15, 120, 146, 0.1)', 'rgba(15, 120, 146, 0.4)', 'rgba(15, 120, 146, 0.8)', '#0f7892']
-                                    : brand == 'SAMSUNG CELULAR'
-                                        ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(113, 39, 131, 0.1)', 'rgba(113, 39, 131, 0.4)', 'rgba(113, 39, 131, 0.8)', '#712783']
-                                        : brand == 'XIAOMI'
-                                            ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(39, 131, 51, 0.1)', 'rgba(39, 131, 51, 0.4)', 'rgba(39, 131, 51, 0.8)', '#278333']
-                                            : brand == 'APPLE '
-                                                ? ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(226, 23, 23, 0.1)', 'rgba(226, 23, 23, 0.4)', 'rgba(226, 23, 23, 0.8)', '#e21717']
-                                                : ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'rgba(49, 39, 131, 0.1)', 'rgba(49, 39, 131, 0.4)', 'rgba(49, 39, 131, 0.8)', '#312783']
-                                }
-                                style={{ height: '100%' }}>
-                                <ScrollView>
-                                    <ContentInfo>
-                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
-                                            <View>
-                                                <Text>{product} - {color}</Text>
-                                                {HandleLowestPrice(device, 'A Vista') && (
-                                                    <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
-                                                )}
-                                            </View>
-                                        )}
-                                        <ContentLocation>
+                            <Video
+                                style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
+                                source={intro}
+                                resizeMode="cover"
+                                isLooping={true}
+                                isMuted={true}
+                                shouldPlay={true}
+                                useNativeControls
+                            />
+                            <ScrollView>
+                                <ContentInfo>
+                                    {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
+                                        <View>
+                                            <Text>{product} - {color}</Text>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                                <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
                                             )}
-                                            {HandleLowestPrice(device, 'Cartão') && (
-                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
-                                            )}
-                                            {HandleLowestPrice(device, 'Carteira') && (
-                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
-                                            )}
-                                        </ContentLocation>
-
-                                        <ImageLogo
-                                            source={require('../../assets/logogazin.png')}
-                                        />
-                                        {/*<Video
+                                        </View>
+                                    )}
+                                    <ContentLocation>
+                                        {HandleLowestPrice(device, 'A Vista') && (
+                                            <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                        )}
+                                        {HandleLowestPrice(device, 'Cartão') && (
+                                            <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                        )}
+                                        {HandleLowestPrice(device, 'Carteira') && (
+                                            <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                        )}
+                                    </ContentLocation>
+                                    {/*<Video
                                             style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
                                             source={intro}
                                             resizeMode="cover"
@@ -406,10 +394,9 @@ export default function Home() {
                                             shouldPlay={true}
                                             useNativeControls
                                             />*/}
-                                    </ContentInfo>
-                                </ScrollView>
-                                {ModalContainer()}
-                            </LinearGradient>
+                                </ContentInfo>
+                            </ScrollView>
+                            {ModalContainer()}
                         </Content>
                     ) : (
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
