@@ -46,6 +46,8 @@ export default function Home() {
     const [device, setDevice] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
 
+    //https://api-precos-celulares.gazin.com.br/varejo/relatorio/promocoes/celulares?idfilial=10002&token=Gazin-tech%C3%87$2y$10$85Udhj9L4Pa9XULE5RxyTu0Yv5G0POBiS7u2Yb693P9o6Ctege7cq%C3%87Gazin-tech
+
     async function loadData() {
         const storageInfo = await AsyncStorage.getItem('@deviceitem')
         let hasDevice = JSON.parse(storageInfo || '{}')
@@ -168,7 +170,9 @@ export default function Home() {
             return produtosFiltradosDataIgualHoje[0]
         }
 
-        const produtosFiltrados = jsonData?.filter((produto: { idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datafinal: string | number | Date; }) => {
+        const produtosFiltrados = jsonData?.filter((produto: {
+            datainicial: string; idproduto: number; produto: string; cor: string; marca: string; tipo: string; voltagem: string; datafinal: string | number | Date;
+        }) => {
 
             return (
                 produto.produto == product &&
@@ -176,7 +180,8 @@ export default function Home() {
                 produto.marca == brand &&
                 produto.tipo == tipo &&
                 produto.voltagem == voltagem &&
-                produto.datafinal >= hoje
+                produto.datafinal >= hoje &&
+                produto.datainicial <= hoje
             )
         })
 
