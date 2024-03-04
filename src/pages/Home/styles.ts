@@ -14,7 +14,6 @@ flex-direction: row;
 height: 60px;
 align-items: center;
 justify-content: space-between;
-background-color: ${ColorTheme.Azul};
 `;
 
 export const ContentLogo = styled.View`

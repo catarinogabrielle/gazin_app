@@ -6,7 +6,12 @@ import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
 import { Video } from 'expo-av';
 
-const intro = require('../../assets/animation.mp4')
+const introAzul = require('../../assets/animationAzul.mp4')
+const introRoxo = require('../../assets/animationRoxo.mp4')
+const introVerde = require('../../assets/animationVerde.mp4')
+const introRosa = require('../../assets/animationRosa.mp4')
+const introVermelho = require('../../assets/animationVermelho.mp4')
+const introAzulAgua = require('../../assets/animationAgua.mp4')
 
 import {
     Container,
@@ -322,7 +327,7 @@ export default function Home() {
                     <TouchableOpacity style={styles.centeredView2} onPress={() => setModalVisible(false)}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Deseja confirmar a saida do aplicativo?</Text>
-                            <Text style={styles.modalTextVer}>Versão - 2.0.0</Text>
+                            <Text style={styles.modalTextVer}>Versão - 3.0.0</Text>
                             <Pressable
                                 style={styles.buttonClose}
                                 onPress={() => {
@@ -350,7 +355,18 @@ export default function Home() {
         <Container>
             {loading ? (
                 <>
-                    <Header>
+                    <Header style={brand == 'SAMSUNG CELULAR' ?
+                        { backgroundColor: '#ae00ff' } :
+                        brand == 'XIAOMI' ?
+                            { backgroundColor: '#00c714' } :
+                            brand == 'MOTOROLA CELULAR' ?
+                                { backgroundColor: '#ff00d4' } :
+                                brand == 'VIVO' ?
+                                    { backgroundColor: '#ee0505' } :
+                                    brand == 'POSITIVO TELECOM' ?
+                                        { backgroundColor: '#12cab2' } :
+                                        { backgroundColor: ColorTheme.Azul }
+                    }>
                         <ContentLogo>
                             <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
                         </ContentLogo>
@@ -361,12 +377,24 @@ export default function Home() {
                         <Content>
                             <Video
                                 style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
-                                source={intro}
+                                source={
+                                    brand == 'SAMSUNG CELULAR' ?
+                                        introRoxo :
+                                        brand == 'XIAOMI' ?
+                                            introVerde :
+                                            brand == 'MOTOROLA CELULAR' ?
+                                                introRosa :
+                                                brand == 'VIVO' ?
+                                                    introVermelho :
+                                                    brand == 'POSITIVO TELECOM' ?
+                                                        introAzulAgua :
+                                                        introAzul
+                                }
                                 resizeMode="cover"
                                 isLooping={true}
                                 isMuted={true}
                                 shouldPlay={true}
-                                useNativeControls
+                            //useNativeControls
                             />
                             <ScrollView>
                                 <ContentInfo>
