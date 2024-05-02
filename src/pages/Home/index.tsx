@@ -362,7 +362,7 @@ export default function Home() {
     const randomWidth = useSharedValue(1)
 
     const config = {
-        duration: 500,
+        duration: 300,
         easing: Easing.bezier(0.5, 0.01, 0, 1),
     }
 
@@ -383,7 +383,7 @@ export default function Home() {
                 setTimeAnimation(!timeAnimation)
             }, 1000)
 
-        }, 600000)
+        }, 60000)
     }, [timeAnimation])
 
     return (
