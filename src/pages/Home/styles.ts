@@ -5,6 +5,7 @@ const ColorTheme = Colors['Theme'];
 export const Container = styled.View`
 height: 100%;
 display: flex;
+background-color:${ColorTheme.Branco3};
 `;
 
 export const Header = styled.View`     
@@ -14,6 +15,7 @@ flex-direction: row;
 height: 60px;
 align-items: center;
 justify-content: space-between;
+background-color:${ColorTheme.Branco3};
 `;
 
 export const ContentLogo = styled.View`

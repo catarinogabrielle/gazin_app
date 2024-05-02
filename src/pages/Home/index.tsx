@@ -6,6 +6,14 @@ import useSWR from "swr";
 import { Ionicons } from "@expo/vector-icons";
 import { Video } from 'expo-av';
 
+import Animated, {
+    useSharedValue,
+    withTiming,
+    useAnimatedStyle,
+    Easing,
+} from 'react-native-reanimated';
+import { Button } from 'react-native';
+
 const introAzul = require('../../assets/animationAzul.mp4')
 const introRoxo = require('../../assets/animationRoxo.mp4')
 const introVerde = require('../../assets/animationVerde.mp4')
@@ -351,27 +359,56 @@ export default function Home() {
         )
     }
 
+    const randomWidth = useSharedValue(1)
+
+    const config = {
+        duration: 500,
+        easing: Easing.bezier(0.5, 0.01, 0, 1),
+    }
+
+    const style = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(randomWidth.value, config),
+        }
+    })
+
+    const [timeAnimation, setTimeAnimation] = useState(true)
+
+    useEffect(() => {
+        setTimeout(() => {
+            randomWidth.value = 0;
+
+            setTimeout(() => {
+                randomWidth.value = 1;
+                setTimeAnimation(!timeAnimation)
+            }, 1000)
+
+        }, 600000)
+    }, [timeAnimation])
+
     return (
         <Container>
             {loading ? (
                 <>
-                    <Header style={brand == 'SAMSUNG CELULAR' ?
-                        { backgroundColor: '#ae00ff' } :
-                        brand == 'XIAOMI' ?
-                            { backgroundColor: '#00c714' } :
-                            brand == 'MOTOROLA CELULAR' ?
-                                { backgroundColor: '#ff00d4' } :
-                                brand == 'VIVO' ?
-                                    { backgroundColor: '#ee0505' } :
-                                    brand == 'POSITIVO TELECOM' ?
-                                        { backgroundColor: '#12cab2' } :
-                                        { backgroundColor: ColorTheme.Azul }
-                    }>
-                        <ContentLogo>
-                            <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
-                        </ContentLogo>
-                        <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
-                    </Header>
+                    <Animated.View style={[style]}>
+                        <Header style={brand == 'SAMSUNG CELULAR' ?
+                            { backgroundColor: '#ae00ff' } :
+                            brand == 'XIAOMI' ?
+                                { backgroundColor: '#00c714' } :
+                                brand == 'MOTOROLA CELULAR' ?
+                                    { backgroundColor: '#ff00d4' } :
+                                    brand == 'VIVO' ?
+                                        { backgroundColor: '#ee0505' } :
+                                        brand == 'POSITIVO TELECOM' ?
+                                            { backgroundColor: '#12cab2' } :
+                                            { backgroundColor: ColorTheme.Azul }
+                        }>
+                            <ContentLogo>
+                                <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
+                            </ContentLogo>
+                            <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                        </Header>
+                    </Animated.View>
 
                     {device.length > 0 ? (
                         <Content>
@@ -397,27 +434,28 @@ export default function Home() {
                             //useNativeControls
                             />
                             <ScrollView>
-                                <ContentInfo>
-                                    {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
-                                        <View>
-                                            <Text>{product} - {color}</Text>
+                                <Animated.View style={[style]}>
+                                    <ContentInfo>
+                                        {brand == 'Marca' || product == 'Modelo' || color == 'Cor' || voltagem == 'Voltagem' ? (null) : (
+                                            <View>
+                                                <Text>{product} - {color}</Text>
+                                                {HandleLowestPrice(device, 'A Vista') && (
+                                                    <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
+                                                )}
+                                            </View>
+                                        )}
+                                        <ContentLocation>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <IdProduct key={HandleLowestPrice(device, 'A Vista').idproduto + '4'}>{HandleLowestPrice(device, 'A Vista').idproduto}</IdProduct>
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                             )}
-                                        </View>
-                                    )}
-                                    <ContentLocation>
-                                        {HandleLowestPrice(device, 'A Vista') && (
-                                            <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
-                                        )}
-                                        {HandleLowestPrice(device, 'Cartão') && (
-                                            <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
-                                        )}
-                                        {HandleLowestPrice(device, 'Carteira') && (
-                                            <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
-                                        )}
-                                    </ContentLocation>
-                                    {/*<Video
+                                            {HandleLowestPrice(device, 'Cartão') && (
+                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                            )}
+                                            {HandleLowestPrice(device, 'Carteira') && (
+                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                            )}
+                                        </ContentLocation>
+                                        {/*<Video
                                             style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
                                             source={intro}
                                             resizeMode="cover"
@@ -426,7 +464,8 @@ export default function Home() {
                                             shouldPlay={true}
                                             useNativeControls
                                             />*/}
-                                </ContentInfo>
+                                    </ContentInfo>
+                                </Animated.View>
                             </ScrollView>
                             {ModalContainer()}
                         </Content>
@@ -547,11 +586,15 @@ export default function Home() {
                     </ContentInfo2>
                 </ImageBackground>
             )}
-        </Container>
+        </Container >
     )
 }
 
 const styles = StyleSheet.create({
+    boxContainer: {
+        display: 'flex',
+        flex: 1,
+    },
     container: {
         color: ColorTheme.Cinza,
         marginTop: 15,
@@ -631,5 +674,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         color: ColorTheme.Branco5,
-    }
+    },
+    box: {
+        width: 100,
+        height: 80,
+        backgroundColor: 'black',
+        margin: 30,
+    },
 });
