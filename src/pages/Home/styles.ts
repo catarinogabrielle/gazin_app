@@ -5,7 +5,6 @@ const ColorTheme = Colors['Theme'];
 export const Container = styled.View`
 height: 100%;
 display: flex;
-background-color:${ColorTheme.Branco3};
 `;
 
 export const Header = styled.View`     
@@ -15,7 +14,7 @@ flex-direction: row;
 height: 60px;
 align-items: center;
 justify-content: space-between;
-background-color:${ColorTheme.Branco3};
+z-index: 1 !important;
 `;
 
 export const ContentLogo = styled.View`
@@ -27,7 +26,7 @@ align-items: center;
 export const TextLogo = styled.Text`                                    
 color: ${ColorTheme.Branco3};
 font-size: 13px;
-font-weight: 300;
+font-weight: 700;
 font-family: Roboto;
 `;
 
@@ -40,9 +39,12 @@ display: flex;
 `;
 
 export const ContentInfo = styled.View`
-padding: 35px 25px;
-//background: ${ColorTheme.Branco3};
+padding: 12px 25px;
+background: ${ColorTheme.Branco};
 border-radius: 10px;
+margin-left: 10px;
+margin-right: 10px;
+margin-bottom: 20px;
 display: flex;
 flex-direction: column;
 `;
@@ -58,7 +60,7 @@ font-family: Roboto;
 export const IdProduct = styled.Text`                                    
 color: ${ColorTheme.Branco5};
 font-size: 16px;
-font-weight: 200;
+font-weight: 500;
 text-transform: uppercase;
 margin-top: 2px;
 font-family: Roboto;
@@ -69,8 +71,6 @@ color: ${ColorTheme.Preto};
 font-size: 19px;
 font-weight: 300;
 font-family: Roboto;
-
-margin-top: 32px;
 `;
 
 export const ContentLocation = styled.View`

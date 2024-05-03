@@ -14,12 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Button } from 'react-native';
 
-const introAzul = require('../../assets/animationAzul.mp4')
-const introRoxo = require('../../assets/animationRoxo.mp4')
-const introVerde = require('../../assets/animationVerde.mp4')
-const introRosa = require('../../assets/animationRosa.mp4')
-const introVermelho = require('../../assets/animationVermelho.mp4')
-const introAzulAgua = require('../../assets/animationAgua.mp4')
+const background_gazin = require('../../assets/gazin.mp4')
 
 import {
     Container,
@@ -359,16 +354,16 @@ export default function Home() {
         )
     }
 
-    const randomWidth = useSharedValue(1)
+    const randomWidth = useSharedValue(30)
 
     const config = {
-        duration: 300,
+        duration: 500,
         easing: Easing.bezier(0.5, 0.01, 0, 1),
     }
 
     const style = useAnimatedStyle(() => {
         return {
-            opacity: withTiming(randomWidth.value, config),
+            marginTop: withTiming(randomWidth.value, config),
         }
     })
 
@@ -376,63 +371,50 @@ export default function Home() {
 
     useEffect(() => {
         setTimeout(() => {
-            randomWidth.value = 0;
+            randomWidth.value = 30;
 
             setTimeout(() => {
-                randomWidth.value = 1;
+                randomWidth.value = 90;
                 setTimeAnimation(!timeAnimation)
-            }, 1000)
+            }, 10000)
 
-        }, 60000)
+        }, 10000)
     }, [timeAnimation])
 
     return (
         <Container>
             {loading ? (
                 <>
-                    <Animated.View style={[style]}>
-                        <Header style={brand == 'SAMSUNG CELULAR' ?
-                            { backgroundColor: '#ae00ff' } :
-                            brand == 'XIAOMI' ?
-                                { backgroundColor: '#00c714' } :
-                                brand == 'MOTOROLA CELULAR' ?
-                                    { backgroundColor: '#ff00d4' } :
-                                    brand == 'VIVO' ?
-                                        { backgroundColor: '#ee0505' } :
-                                        brand == 'POSITIVO TELECOM' ?
-                                            { backgroundColor: '#12cab2' } :
-                                            { backgroundColor: ColorTheme.Azul }
-                        }>
-                            <ContentLogo>
-                                <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
-                            </ContentLogo>
-                            <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
-                        </Header>
-                    </Animated.View>
+                    <Video
+                        style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
+                        source={background_gazin}
+                        resizeMode="cover"
+                        isLooping={true}
+                        isMuted={true}
+                        shouldPlay={true}
+                    //useNativeControls
+                    />
+
+                    <Header style={brand == 'SAMSUNG CELULAR' ?
+                        { backgroundColor: '#12cab2a7' } :
+                        brand == 'XIAOMI' ?
+                            { backgroundColor: '#00c714a7' } :
+                            brand == 'MOTOROLA CELULAR' ?
+                                { backgroundColor: '#ff00d4a7' } :
+                                brand == 'VIVO' ?
+                                    { backgroundColor: '#ee0505a7' } :
+                                    brand == 'POSITIVO TELECOM' ?
+                                        { backgroundColor: '#ae00ffa7' } :
+                                        { backgroundColor: ColorTheme.Azul }
+                    }>
+                        <ContentLogo>
+                            <TextLogo>Seja Bem Vindo à Gazin</TextLogo>
+                        </ContentLogo>
+                        <Ionicons onPress={() => setModalVisible(true)} name="exit-outline" size={22} color={ColorTheme.Branco3} />
+                    </Header>
 
                     {device.length > 0 ? (
-                        <Content>
-                            <Video
-                                style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
-                                source={
-                                    brand == 'SAMSUNG CELULAR' ?
-                                        introRoxo :
-                                        brand == 'XIAOMI' ?
-                                            introVerde :
-                                            brand == 'MOTOROLA CELULAR' ?
-                                                introRosa :
-                                                brand == 'VIVO' ?
-                                                    introVermelho :
-                                                    brand == 'POSITIVO TELECOM' ?
-                                                        introAzulAgua :
-                                                        introAzul
-                                }
-                                resizeMode="cover"
-                                isLooping={true}
-                                isMuted={true}
-                                shouldPlay={true}
-                            //useNativeControls
-                            />
+                        <>
                             <ScrollView>
                                 <Animated.View style={[style]}>
                                     <ContentInfo>
@@ -444,18 +426,28 @@ export default function Home() {
                                                 )}
                                             </View>
                                         )}
-                                        <ContentLocation>
+                                    </ContentInfo>
+
+                                    <ContentLocation>
+                                        <ContentInfo>
                                             {HandleLowestPrice(device, 'A Vista') && (
-                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
+                                                <Label key={HandleLowestPrice(device, 'A Vista').idproduto + '1'}><Text style={{ color: ColorTheme.Azul, fontSize: 28 }}>{mask(HandleLowestPrice(device, 'A Vista').precopartida)}</Text> (A Vista)</Label>
                                             )}
+                                        </ContentInfo>
+
+                                        <ContentInfo>
                                             {HandleLowestPrice(device, 'Cartão') && (
-                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
+                                                <Label key={HandleLowestPrice(device, 'Cartão').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 28 }}>{mask(HandleLowestPrice(device, 'Cartão').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Roxo, fontSize: 24 }}> {HandleLowestPrice(device, 'Cartão').prazofinal}x </Text>no cartão.</Label>
                                             )}
+                                        </ContentInfo>
+
+                                        <ContentInfo>
                                             {HandleLowestPrice(device, 'Carteira') && (
-                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 26 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Laranja, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
+                                                <Label key={HandleLowestPrice(device, 'Carteira').idproduto + '2'}><Text style={{ color: ColorTheme.Azul, fontSize: 28 }}>{mask(HandleLowestPrice(device, 'Carteira').precoaprazo)}</Text>  Parcelas em até<Text style={{ color: ColorTheme.Roxo, fontSize: 24 }}> {HandleLowestPrice(device, 'Carteira').prazofinal}x </Text>no carne.</Label>
                                             )}
-                                        </ContentLocation>
-                                        {/*<Video
+                                        </ContentInfo>
+                                    </ContentLocation>
+                                    {/*<Video
                                             style={{ position: 'absolute', width: '100%', height: '100%', flex: 1 }}
                                             source={intro}
                                             resizeMode="cover"
@@ -464,17 +456,15 @@ export default function Home() {
                                             shouldPlay={true}
                                             useNativeControls
                                             />*/}
-                                    </ContentInfo>
                                 </Animated.View>
                             </ScrollView>
                             {ModalContainer()}
-                        </Content>
+                        </>
                     ) : (
                         <Content style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator style={{ position: 'absolute', top: 80 }} size={40} color={ColorTheme.Azul} />
                         </Content>
-                    )
-                    }
+                    )}
                 </>
             ) : (
                 <ImageBackground source={require('../../assets/background.png')} resizeMode="cover" style={{ flex: 1 }}>
