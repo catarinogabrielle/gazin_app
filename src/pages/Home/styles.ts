@@ -40,7 +40,7 @@ display: flex;
 
 export const ContentInfo = styled.View`
 padding: 12px 25px;
-background: ${ColorTheme.Branco};
+background: ${ColorTheme.Branco3};
 border-radius: 10px;
 margin-left: 10px;
 margin-right: 10px;
