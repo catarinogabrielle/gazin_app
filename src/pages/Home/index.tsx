@@ -252,7 +252,7 @@ export default function Home() {
     }
 
     async function handleDeleteDevice() {
-        /*const storageId = await AsyncStorage.getItem('@deviceId')
+        const storageId = await AsyncStorage.getItem('@deviceId')
         let hasDeviceId = JSON.parse(storageId || '{}')
         try {
             await Api.delete('/devices', {
@@ -263,11 +263,9 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
-        */
     }
 
     async function handleAddDevice() {
-        /*
         try {
             await Api.post('/devices', {
                 device: product,
@@ -288,11 +286,10 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
-        */
     }
 
     async function handleDeviceUpdate() {
-        /*
+
         const storageId = await AsyncStorage.getItem('@deviceId')
         let hasDeviceId = JSON.parse(storageId || '{}')
 
@@ -306,17 +303,14 @@ export default function Home() {
         } catch (err) {
             console.log('erro', err)
         }
-        */
     }
-    /*
-        useEffect(() => {
-            if (loading == true) {
-                setTimeout(() => {
-                    handleDeviceUpdate()
-                }, 5000)
-            }
-        }, [device, loading])
-        */
+    useEffect(() => {
+        if (loading == true) {
+            setTimeout(() => {
+                handleDeviceUpdate()
+            }, 5000)
+        }
+    }, [device, loading])
 
     const ModalContainer = () => {
         return (
